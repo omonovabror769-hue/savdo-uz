@@ -4,7 +4,7 @@ import type { Product } from '../data/types';
 import { useI18n } from '../i18n';
 import { useStore } from '../store';
 import { subById, catById } from '../data/catalog';
-import { Rating, Thumb } from './ui';
+import { PRating, Thumb } from './ui';
 import { IconCompare, IconHeart, IconCheck } from './Icons';
 
 export function Qty({ value, onChange, min = 1 }: { value: number; onChange: (n: number) => void; min?: number }) {
@@ -132,7 +132,7 @@ export function ProductRow({ p }: { p: Product }) {
       <div className="prow-main">
         <Link to={`/product/${p.id}`} className="pname">{fullName(p, tr)}</Link>
         <Avail p={p} />
-        <Rating value={p.rating} count={p.reviews} />
+        <PRating id={p.id} />
         <div className="ppath">
           <Link to={`/catalog/${cat.id}`}>{tr(cat.n)}</Link> › <Link to={`/catalog/${cat.id}/${s.sub.id}`}>{tr(s.sub.n)}</Link>
         </div>
@@ -163,7 +163,7 @@ export function ProductCard({ p }: { p: Product }) {
       <SideIcons p={p} />
       <Price p={p} />
       <Link to={`/product/${p.id}`} className="pname">{fullName(p, tr)}</Link>
-      <Rating value={p.rating} count={p.reviews} />
+      <PRating id={p.id} />
       <Avail p={p} />
       <BuyControls p={p} />
     </article>

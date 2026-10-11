@@ -1,12 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import { productById, productsOfSub, productsOfCat } from '../data/catalog';
 import { subById } from '../data/catalog';
-import { Crumbs, Rating, SeoBlock, Thumb } from '../components/ui';
+import { Crumbs, PRating, Rating, SeoBlock, Thumb } from '../components/ui';
 import { Avail, Badges, BuyControls, Price, ProductCard, fullName } from '../components/Product';
 import { useStore } from '../store';
-import { IconCompare, IconHeart, IconCheck } from '../components/Icons';
+import { IconCompare, IconHeart, IconCheck, GoogleG } from '../components/Icons';
 import NotFound from './NotFound';
 
 export default function ProductPage() {
@@ -14,7 +14,8 @@ export default function ProductPage() {
   const { tr, t, unit, money } = useI18n();
   const { favs, toggleFav, cmp, toggleCmp, showToast } = useStore();
   const p = productById.get(id);
-  const [tab, setTab] = useState<'spec' | 'desc'>('spec');
+  const [tab, setTab] = useState<'spec' | 'desc' | 'rev'>('spec');
+  const { ratingOf } = useStore();
   const variants = useMemo(() => (p ? productsOfSub(p.subId).filter((x) => x.n[0] === p.n[0]) : []), [p]);
   const similar = useMemo(() => (p ? productsOfSub(p.subId).filter((x) => x.n[0] !== p.n[0]).slice(0, 5) : []), [p]);
   const extra = useMemo(() => {
@@ -37,7 +38,7 @@ export default function ProductPage() {
       <Crumbs items={[{ to: `/catalog/${cat.id}`, label: tr(cat.n) }, { to: `/catalog/${cat.id}/${sub.id}`, label: tr(sub.n) }, { label: tr(p.n) }]} />
       <h1 className="pp-title">{fullName(p, tr)}</h1>
       <div className="pp-meta">
-        <Rating value={p.rating} count={p.reviews} />
+        <PRating id={p.id} />
         <span className="muted">{t('sku')}: {p.sku}</span>
         <button className={'link-btn' + (isFav ? ' on' : '')} onClick={() => { if (!isFav) showToast(t('addedFav')); toggleFav(p.id); }}>
           <IconHeart size={16} filled={isFav} /> {t('favorites')}
@@ -86,8 +87,11 @@ export default function ProductPage() {
       <div className="tabs">
         <button className={tab === 'spec' ? 'on' : ''} onClick={() => setTab('spec')}>{t('specs')}</button>
         <button className={tab === 'desc' ? 'on' : ''} onClick={() => setTab('desc')}>{t('description')}</button>
+        <button className={tab === 'rev' ? 'on' : ''} onClick={() => setTab('rev')}>{tr(['Sharhlar', 'Отзывы', 'Reviews'])} ({ratingOf(p.id).count})</button>
       </div>
-      {tab === 'spec' ? (
+      {tab === 'rev' ? (
+        <Reviews productId={p.id} />
+      ) : tab === 'spec' ? (
         <dl className="pp-specs">
           <div><dt>{t('sku')}</dt><dd>{p.sku}</dd></div>
           <div><dt>{t('category')}</dt><dd>{tr(sub.n)}</dd></div>
@@ -113,6 +117,63 @@ export default function ProductPage() {
         </section>
       )}
       <SeoBlock title={tr(sub.n)} />
+    </div>
+  );
+}
+
+function Reviews({ productId }: { productId: string }) {
+  const { tr, t } = useI18n();
+  const { reviews, addReview, user, login, showToast } = useStore();
+  const list = reviews.filter((r) => r.productId === productId);
+  const [rating, setRating] = useState(5);
+  const [text, setText] = useState('');
+  const [err, setErr] = useState('');
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    if (text.trim().length < 5) return setErr(tr(["Kamida 5 ta belgi yozing", 'Напишите хотя бы 5 символов', 'Write at least 5 characters']));
+    addReview({ productId, rating, text: text.trim() });
+    setText('');
+    setErr('');
+    showToast(tr(['Sharh qoldirildi', 'Отзыв опубликован', 'Review posted']));
+  };
+  return (
+    <div className="reviews">
+      <div className="rev-list">
+        {list.length === 0 && <p className="muted">{tr(["Hali sharh yo'q. Birinchi bo'lib fikr bildiring.", 'Отзывов пока нет. Будьте первым.', 'No reviews yet. Be the first.'])}</p>}
+        {list.map((r) => (
+          <div key={r.id} className="rev">
+            <div className="rev-head">
+              <b>{r.author}</b>
+              <Rating value={r.rating} />
+              <span className="muted small">{new Date(r.date).toLocaleDateString('ru-RU')}</span>
+            </div>
+            <p>{r.text}</p>
+          </div>
+        ))}
+      </div>
+      <div className="card rev-form">
+        <h3>{tr(['Sharh yozish', 'Написать отзыв', 'Write a review'])}</h3>
+        {user ? (
+          <form onSubmit={submit}>
+            <div className="star-pick" role="radiogroup" aria-label="rating">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <button key={i} type="button" role="radio" aria-checked={rating === i} className={i <= rating ? 'on' : ''} onClick={() => setRating(i)}>★</button>
+              ))}
+            </div>
+            <label className="field">
+              <span>{tr(['Fikringiz', 'Ваш отзыв', 'Your review'])}</span>
+              <textarea id="rev-text" rows={4} value={text} onChange={(e) => setText(e.target.value)} placeholder={tr(["Tovar haqida nima deya olasiz?", 'Что скажете о товаре?', 'What do you think of this product?'])} />
+            </label>
+            {err && <p className="err">{err}</p>}
+            <button className="btn btn-yellow" type="submit">{tr(['Yuborish', 'Отправить', 'Submit'])}</button>
+          </form>
+        ) : (
+          <>
+            <p className="muted">{tr(['Sharh yozish uchun kiring.', 'Войдите, чтобы оставить отзыв.', 'Sign in to leave a review.'])}</p>
+            <button className="gbtn" onClick={login}><GoogleG /> <span>{t('withGoogle')}</span></button>
+          </>
+        )}
+      </div>
     </div>
   );
 }

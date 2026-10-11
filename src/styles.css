@@ -659,3 +659,28 @@ h1, h2, h3 { text-wrap: balance; }
   .store { flex-direction: column; align-items: stretch; }
   .pay-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ===== Qidiruv maslahatlari, sharhlar ===== */
+.search { position: relative; overflow: visible; }
+.search input { border-radius: 5px 0 0 5px; }
+.search-btn { border-radius: 0 4px 4px 0; }
+.sugg { position: absolute; top: calc(100% + 6px); left: -2px; right: -2px; z-index: 70; list-style: none; margin: 0; padding: 6px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 16px 40px rgba(0,0,0,.14); max-height: 70vh; overflow: auto; }
+.sugg button { width: 100%; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; text-align: left; padding: 6px 8px; border-radius: 8px; font-size: 13px; }
+.sugg button:hover, .sugg button.on { background: var(--soft); }
+.sugg .thumb-sm { width: 40px; }
+.sugg .thumb-sm span { font-size: 20px; }
+.sugg-l { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sugg-s { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.sugg .sugg-all { display: block; color: var(--ink-2); font-weight: 600; padding: 10px 8px; }
+.reviews { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start; }
+.rev-list { display: flex; flex-direction: column; gap: 12px; }
+.rev { border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.rev-head { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.rev p { margin: 6px 0 0; color: var(--ink-2); white-space: pre-line; overflow-wrap: anywhere; }
+.rev-form form { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.rev-form .field { width: 100%; }
+.rev-form .gbtn { margin-top: 0; }
+.star-pick { display: flex; gap: 2px; }
+.star-pick button { font-size: 28px; line-height: 1; color: var(--line); padding: 0 2px; }
+.star-pick button.on { color: var(--star); }
+@media (max-width: 900px) { .reviews { grid-template-columns: minmax(0, 1fr); } }

@@ -145,7 +145,7 @@ export function Favorites() {
 
 export function Compare() {
   const { t, tr, money, unit } = useI18n();
-  const { cmp, toggleCmp, clearCmp } = useStore();
+  const { cmp, toggleCmp, clearCmp, ratingOf } = useStore();
   const items = cmp.map((id) => productById.get(id)!).filter(Boolean);
   return (
     <AccountShell title={t('compare')}>
@@ -171,7 +171,7 @@ export function Compare() {
                 <tr><td>{t('size')}</td>{items.map((p) => <td key={p.id}>{p.spec}</td>)}</tr>
                 <tr><td>{t('category')}</td>{items.map((p) => <td key={p.id}>{tr(subById.get(p.subId)!.sub.n)}</td>)}</tr>
                 <tr><td>{t('country')}</td>{items.map((p) => <td key={p.id}>{tr(p.country)}</td>)}</tr>
-                <tr><td>{t('sortRating')}</td>{items.map((p) => <td key={p.id}>★ {p.rating} ({p.reviews})</td>)}</tr>
+                <tr><td>{t('sortRating')}</td>{items.map((p) => <td key={p.id}>{ratingOf(p.id).count ? `★ ${ratingOf(p.id).avg} (${ratingOf(p.id).count})` : '—'}</td>)}</tr>
                 <tr><td>{t('availability')}</td>{items.map((p) => <td key={p.id}>{p.stock > 0 ? `${p.stock} ${unit(p.unit)}` : t('onOrder')}</td>)}</tr>
               </tbody>
             </table>

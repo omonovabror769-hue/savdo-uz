@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Product } from '../data/types';
 import { useI18n } from '../i18n';
 import { storage } from '../store/storage';
+import { useStore } from '../store';
 import { ProductCard, ProductRow } from './Product';
 import { IconFilter, IconGrid, IconList, IconClose } from './Icons';
 
@@ -10,6 +11,8 @@ const PAGE = 24;
 
 export default function Listing({ items, aside, banner }: { items: Product[]; aside?: ReactNode; banner?: ReactNode }) {
   const { t, money } = useI18n();
+  const { ratingOf } = useStore();
+  const [when, setWhen] = useState<'any' | 'today' | 'tomorrow'>('any');
   const [sort, setSort] = useState<SortKey>('pop');
   const [view, setView] = useState<'list' | 'grid'>(() => storage.get('view', 'list'));
   const [brands, setBrands] = useState<string[]>([]);
@@ -24,7 +27,7 @@ export default function Listing({ items, aside, banner }: { items: Product[]; as
 
   useEffect(() => storage.set('view', view), [view]);
   useEffect(() => {
-    setBrands([]); setMinP(''); setMaxP(''); setOnlyStock(false); setOnlyDisc(false); setOnlyNew(false); setLimit(PAGE);
+    setBrands([]); setMinP(''); setMaxP(''); setOnlyStock(false); setOnlyDisc(false); setOnlyNew(false); setWhen('any'); setLimit(PAGE);
   }, [items]);
 
   const brandList = useMemo(() => {
@@ -46,19 +49,21 @@ export default function Listing({ items, aside, banner }: { items: Product[]; as
         p.price >= lo && p.price <= hi &&
         (!onlyStock || p.stock > 0) &&
         (!onlyDisc || !!p.oldPrice) &&
-        (!onlyNew || !!p.isNew),
+        (!onlyNew || !!p.isNew) &&
+        (when === 'any' || (when === 'today' ? p.stock > 50 : p.stock > 0)),
     );
     const s = [...r];
     if (sort === 'cheap') s.sort((a, b) => a.price - b.price);
     else if (sort === 'exp') s.sort((a, b) => b.price - a.price);
-    else if (sort === 'rating') s.sort((a, b) => b.rating - a.rating);
-    else if (sort === 'reviews') s.sort((a, b) => b.reviews - a.reviews);
+    else if (sort === 'rating') s.sort((a, b) => ratingOf(b.id).avg - ratingOf(a.id).avg || b.rating - a.rating);
+    else if (sort === 'reviews') s.sort((a, b) => ratingOf(b.id).count - ratingOf(a.id).count || b.reviews - a.reviews);
     else s.sort((a, b) => Number(!!b.hit) - Number(!!a.hit) || b.reviews * b.rating - a.reviews * a.rating);
     return s;
-  }, [items, brands, minP, maxP, onlyStock, onlyDisc, onlyNew, sort]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, brands, minP, maxP, onlyStock, onlyDisc, onlyNew, when, sort]);
 
-  const anyFilter = brands.length || minP || maxP || onlyStock || onlyDisc || onlyNew;
-  const reset = () => { setBrands([]); setMinP(''); setMaxP(''); setOnlyStock(false); setOnlyDisc(false); setOnlyNew(false); };
+  const anyFilter = brands.length || minP || maxP || onlyStock || onlyDisc || onlyNew || when !== 'any';
+  const reset = () => { setBrands([]); setMinP(''); setMaxP(''); setOnlyStock(false); setOnlyDisc(false); setOnlyNew(false); setWhen('any'); };
 
   const sorts: [SortKey, string][] = [
     ['pop', t('sortPop')], ['cheap', t('sortCheap')], ['exp', t('sortExp')], ['rating', t('sortRating')], ['reviews', t('sortReviews')],
@@ -87,9 +92,9 @@ export default function Listing({ items, aside, banner }: { items: Product[]; as
         </div>
         <div className="fblock">
           <h4>{t('canGet')}</h4>
-          <label className="chk"><input type="radio" name="get" defaultChecked /> {t('today')} ({items.filter((p) => p.stock > 50).length})</label>
-          <label className="chk"><input type="radio" name="get" /> {t('tomorrow')} ({items.filter((p) => p.stock > 0).length})</label>
-          <label className="chk"><input type="radio" name="get" /> {t('upTo5')} ({items.length})</label>
+          <label className="chk"><input type="radio" name="get" checked={when === 'today'} onChange={() => setWhen('today')} /> {t('today')} ({items.filter((p) => p.stock > 50).length})</label>
+          <label className="chk"><input type="radio" name="get" checked={when === 'tomorrow'} onChange={() => setWhen('tomorrow')} /> {t('tomorrow')} ({items.filter((p) => p.stock > 0).length})</label>
+          <label className="chk"><input type="radio" name="get" checked={when === 'any'} onChange={() => setWhen('any')} /> {t('upTo5')} ({items.length})</label>
         </div>
         {brandList.length > 1 && (
           <div className="fblock">

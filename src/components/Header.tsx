@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent as RKeyboardEvent } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LANGS, useI18n } from '../i18n';
 import { useStore } from '../store';
-import { categories, productsOfSub } from '../data/catalog';
+import { categories, productsOfSub, searchProducts } from '../data/catalog';
+import { Thumb } from './ui';
 import { cities } from '../data/content';
 import {
   IconCart, IconChevronDown, IconClose, IconCompare, IconHeart, IconMenu, IconPin, IconSearch, IconServices, IconUser, IconBox,
@@ -107,7 +108,7 @@ function MegaMenu({ onClose }: { onClose: () => void }) {
 }
 
 export default function Header() {
-  const { t, tr } = useI18n();
+  const { t, tr, money } = useI18n();
   const { cartCount, favs, cmp, user, login } = useStore();
   const [menu, setMenu] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
@@ -128,10 +129,37 @@ export default function Header() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  const [focus, setFocus] = useState(false);
+  const [hi, setHi] = useState(-1);
+  const sugg = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    if (term.length < 2) return [] as { to: string; label: string; sub?: string; emoji: string; catId: string }[];
+    const subs = categories.flatMap((c) => c.subs.map((s) => ({ c, s })))
+      .filter(({ s }) => s.n.some((n) => n.toLowerCase().includes(term)))
+      .slice(0, 3)
+      .map(({ c, s }) => ({ to: `/catalog/${c.id}/${s.id}`, label: tr(s.n), sub: tr(c.n), emoji: s.e, catId: c.id }));
+    const prods = searchProducts(term).slice(0, 6).map((p) => ({
+      to: `/product/${p.id}`, label: `${tr(p.n)} ${p.brand} ${p.spec}`, sub: money(p.price), emoji: p.emoji, catId: p.catId,
+    }));
+    return [...subs, ...prods];
+  }, [q, tr, money]);
+  const showSugg = focus && sugg.length > 0;
+
+  const go = (to: string) => {
+    nav(to);
+    setFocus(false);
+    inputRef.current?.blur();
+  };
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    if (q.trim()) nav(`/search?q=${encodeURIComponent(q.trim())}`);
-    inputRef.current?.blur();
+    if (hi >= 0 && sugg[hi]) return go(sugg[hi].to);
+    if (q.trim()) go(`/search?q=${encodeURIComponent(q.trim())}`);
+  };
+  const onKey = (e: RKeyboardEvent<HTMLInputElement>) => {
+    if (!showSugg) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); setHi((h) => Math.min(sugg.length - 1, h + 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setHi((h) => Math.max(-1, h - 1)); }
+    else if (e.key === 'Escape') setFocus(false);
   };
 
   return (
@@ -168,10 +196,35 @@ export default function Header() {
               ref={inputRef}
               id="search-input"
               value={q}
-              onChange={(e) => setQ(e.target.value)}
+              onChange={(e) => { setQ(e.target.value); setHi(-1); setFocus(true); }}
+              onFocus={() => setFocus(true)}
+              onBlur={() => setTimeout(() => setFocus(false), 150)}
+              onKeyDown={onKey}
               placeholder={t('searchPh')}
               aria-label={t('find')}
+              autoComplete="off"
+              role="combobox"
+              aria-expanded={showSugg}
+              aria-controls="search-sugg"
             />
+            {showSugg && (
+              <ul className="sugg" id="search-sugg" role="listbox">
+                {sugg.map((s, i) => (
+                  <li key={s.to} role="option" aria-selected={i === hi}>
+                    <button type="button" className={i === hi ? 'on' : ''} onMouseDown={(e) => { e.preventDefault(); go(s.to); }}>
+                      <Thumb emoji={s.emoji} catId={s.catId} size="sm" />
+                      <span className="sugg-l">{s.label}</span>
+                      <span className="sugg-s">{s.sub}</span>
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button type="button" className="sugg-all" onMouseDown={(e) => { e.preventDefault(); go(`/search?q=${encodeURIComponent(q.trim())}`); }}>
+                    {t('showAll')}: «{q.trim()}»
+                  </button>
+                </li>
+              </ul>
+            )}
             <button type="submit" className="search-btn">
               <IconSearch size={18} className="only-mobile" />
               <span className="hide-mobile">{t('find')}</span>

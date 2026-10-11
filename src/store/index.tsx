@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { storage } from './storage';
 import { demoUser, googleSignOut, initGoogle, isDemo, type User } from './auth';
 import { productById } from '../data/catalog';
@@ -65,6 +65,7 @@ interface StoreCtx {
   cancelRequest: (id: string) => void;
   reviews: Review[];
   addReview: (r: Omit<Review, 'id' | 'date' | 'author'>) => void;
+  ratingOf: (productId: string) => { avg: number; count: number };
   profile: Profile;
   setProfile: (p: Partial<Profile>) => void;
   club: boolean;
@@ -181,6 +182,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const addReview: StoreCtx['addReview'] = (r) =>
     setReviews((list) => [{ ...r, id: String(Date.now()), date: new Date().toISOString(), author: user?.name || 'Mehmon' }, ...list]);
 
+  const ratingMap = useMemo(() => {
+    const m = new Map<string, { sum: number; count: number }>();
+    reviews.forEach((r) => {
+      const x = m.get(r.productId) || { sum: 0, count: 0 };
+      m.set(r.productId, { sum: x.sum + r.rating, count: x.count + 1 });
+    });
+    return m;
+  }, [reviews]);
+  const ratingOf = (id: string) => {
+    const x = ratingMap.get(id);
+    return x ? { avg: Math.round((x.sum / x.count) * 10) / 10, count: x.count } : { avg: 0, count: 0 };
+  };
+
   const profile: Profile = { phone: '', address: '', birthday: '', ...(user ? profiles[user.id] : {}), city: user ? profiles[user.id]?.city ?? cityAnon : cityAnon };
   const setProfile = (p: Partial<Profile>) => {
     if (p.city != null) setCityAnon(p.city);
@@ -195,7 +209,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         user, login, signInDemo, logout, loginOpen, setLoginOpen,
         cart: valid, addToCart, setQty, removeFromCart, clearCart, cartCount, cartTotal,
         favs, toggleFav, cmp, toggleCmp, clearCmp, orders, placeOrder, cancelOrder, repeatOrder,
-        requests, addRequest, cancelRequest, reviews, addReview, profile, setProfile, club, joinClub, toast, showToast,
+        requests, addRequest, cancelRequest, reviews, addReview, ratingOf, profile, setProfile, club, joinClub, toast, showToast,
       }}
     >
       {children}

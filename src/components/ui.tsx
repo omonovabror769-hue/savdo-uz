@@ -20,6 +20,13 @@ export function Thumb({ emoji, catId, size = 'md', img }: { emoji: string; catId
   );
 }
 
+/** Tovar reytingi — faqat haqiqiy foydalanuvchi sharhlaridan hisoblanadi */
+export function PRating({ id }: { id: string }) {
+  const { ratingOf } = useStore();
+  const r = ratingOf(id);
+  return <Rating value={r.avg} count={r.count} />;
+}
+
 export function Rating({ value, count }: { value: number; count?: number }) {
   return (
     <span className="rating" aria-label={`${value} / 5`}>
