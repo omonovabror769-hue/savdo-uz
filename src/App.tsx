@@ -8,8 +8,9 @@ import Home from './pages/Home';
 import { CategoryPage, SalePage, SearchPage, SubPage } from './pages/Catalog';
 import ProductPage from './pages/ProductPage';
 import Cart from './pages/Cart';
-import { Account, Compare, Favorites, Orders, Points } from './pages/Account';
-import { Delivery, Promos, Services } from './pages/Promos';
+import { Account, Compare, Favorites, Orders, Points, Requests } from './pages/Account';
+import { Delivery, Promos } from './pages/Promos';
+import { ServicePage, Services } from './pages/Services';
 import NotFound from './pages/NotFound';
 
 function ScrollTop() {
@@ -39,8 +40,10 @@ export default function App() {
               <Route path="/account" element={<Account />} />
               <Route path="/account/orders" element={<Orders />} />
               <Route path="/account/points" element={<Points />} />
+              <Route path="/account/requests" element={<Requests />} />
               <Route path="/promos" element={<Promos />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/services/:id" element={<ServicePage />} />
               <Route path="/delivery" element={<Delivery />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

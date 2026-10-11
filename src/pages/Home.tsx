@@ -98,7 +98,7 @@ export default function Home() {
         </div>
         <div className="svc-strip">
           {services.slice(0, 8).map((s) => (
-            <Link key={s.id} to="/services" className="svc-mini"><span>{s.e}</span>{tr(s.n)}</Link>
+            <Link key={s.id} to={`/services/${s.id}`} className="svc-mini"><span>{s.e}</span>{tr(s.n)}</Link>
           ))}
         </div>
       </section>

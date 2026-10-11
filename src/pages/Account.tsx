@@ -9,7 +9,7 @@ import { isDemo } from '../store/auth';
 import type { ReactNode } from 'react';
 
 function AccountShell({ children, title }: { children: ReactNode; title: string }) {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const { user, logout } = useStore();
   return (
     <div className="container page">
@@ -18,6 +18,7 @@ function AccountShell({ children, title }: { children: ReactNode; title: string 
           <NavLink to="/account" end>{t('personal')}</NavLink>
           <h5>{t('goodsH')}</h5>
           <NavLink to="/account/orders">{t('orders')}</NavLink>
+          <NavLink to="/account/requests">{tr(['Arizalarim', 'Мои заявки', 'My requests'])}</NavLink>
           <NavLink to="/favorites">{t('favorites')}</NavLink>
           <NavLink to="/compare">{t('compare')}</NavLink>
           <h5>{t('privileges')}</h5>
@@ -177,6 +178,42 @@ export function Compare() {
           </div>
           <button className="link-btn small" onClick={clearCmp}><IconTrash size={14} /> {t('clearCmp')}</button>
         </>
+      )}
+    </AccountShell>
+  );
+}
+
+export function Requests() {
+  const { tr } = useI18n();
+  const { requests, cancelRequest } = useStore();
+  const dfmt = (s: string) => new Date(s).toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' });
+  return (
+    <AccountShell title={tr(['Arizalarim', 'Мои заявки', 'My requests'])}>
+      {requests.length === 0 ? (
+        <div className="empty-box">
+          {tr(["Hozircha arizalar yo'q.", 'Заявок пока нет.', 'No requests yet.'])}{' '}
+          <Link to="/services" className="link-u">{tr(["Xizmatlarni ko'rish", 'Посмотреть услуги', 'Browse services'])}</Link>
+        </div>
+      ) : (
+        <div className="orders">
+          {requests.map((r) => (
+            <div key={r.id} className="order">
+              <div className="order-head">
+                <b>№{r.id} · {r.title}</b>
+                <span className="muted">{dfmt(r.date)}</span>
+                <span className={'pill ' + (r.status === 'cancelled' ? 'grey' : 'green')}>
+                  {r.status === 'cancelled' ? tr(['Bekor qilingan', 'Отменена', 'Cancelled']) : tr(["Ko'rib chiqilmoqda", 'На рассмотрении', 'In review'])}
+                </span>
+                {r.status !== 'cancelled' && (
+                  <button className="link-btn small order-sum" onClick={() => cancelRequest(r.id)}>{tr(['Bekor qilish', 'Отменить', 'Cancel'])}</button>
+                )}
+              </div>
+              <dl className="kv">
+                {Object.entries(r.fields).map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
+              </dl>
+            </div>
+          ))}
+        </div>
       )}
     </AccountShell>
   );

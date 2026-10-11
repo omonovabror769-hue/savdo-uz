@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
-import { promos, promoTags, services, trucks, type Promo } from '../data/content';
+import { promos, promoTags, trucks, type Promo } from '../data/content';
 import { Crumbs } from '../components/ui';
 
 export function PromoCard({ p }: { p: Promo }) {
@@ -35,31 +35,6 @@ export function Promos() {
         ))}
       </div>
       <div className="promo-grid">{list.map((p) => <PromoCard key={p.id} p={p} />)}</div>
-    </div>
-  );
-}
-
-export function Services() {
-  const { t, tr } = useI18n();
-  return (
-    <div className="container page">
-      <div className="with-side">
-        <aside className="side-nav">
-          {services.map((s) => <a key={s.id} href={`#svc-${s.id}`} onClick={(e) => { e.preventDefault(); document.getElementById(`svc-${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }}>{tr(s.n)}</a>)}
-        </aside>
-        <div className="minw0">
-          <h1 className="page-title">{t('servicesTitle')}</h1>
-          <p className="lead">{t('servicesLead')}</p>
-          <div className="svc-grid">
-            {services.map((s) => (
-              <Link key={s.id} id={`svc-${s.id}`} to={s.id === 'delivery' ? '/delivery' : '/services'} className="svc">
-                <span className="svc-ic">{s.e}</span>
-                <span>{tr(s.n)}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

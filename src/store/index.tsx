@@ -13,7 +13,29 @@ export interface Order {
   phone: string;
   delivery: 'courier' | 'pickup';
   pay: 'cash' | 'card';
+  status?: 'new' | 'cancelled';
 }
+
+/** Xizmat / B2B / fikr arizasi */
+export interface Request {
+  id: string;
+  kind: string; // xizmat id yoki 'b2b' | 'feedback' | 'rent' | 'return'
+  title: string;
+  date: string;
+  fields: Record<string, string>;
+  status: 'new' | 'cancelled';
+}
+
+export interface Review {
+  id: string;
+  productId: string;
+  author: string;
+  rating: number;
+  text: string;
+  date: string;
+}
+
+export interface Profile { phone: string; address: string; birthday: string; city: number }
 
 interface StoreCtx {
   user: User | null;
@@ -36,6 +58,17 @@ interface StoreCtx {
   clearCmp: () => void;
   orders: Order[];
   placeOrder: (o: Omit<Order, 'no' | 'date' | 'lines' | 'total'>) => Order;
+  cancelOrder: (no: string) => void;
+  repeatOrder: (no: string) => void;
+  requests: Request[];
+  addRequest: (r: Omit<Request, 'id' | 'date' | 'status'>) => Request;
+  cancelRequest: (id: string) => void;
+  reviews: Review[];
+  addReview: (r: Omit<Review, 'id' | 'date' | 'author'>) => void;
+  profile: Profile;
+  setProfile: (p: Partial<Profile>) => void;
+  club: boolean;
+  joinClub: () => void;
   toast: string | null;
   showToast: (s: string) => void;
 }
@@ -55,6 +88,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [favs, setFavs] = usePersist<string[]>('favs', []);
   const [cmp, setCmp] = usePersist<string[]>('cmp', []);
   const [ordersAll, setOrdersAll] = usePersist<Record<string, Order[]>>('orders', {});
+  const [reqAll, setReqAll] = usePersist<Record<string, Request[]>>('requests', {});
+  const [reviews, setReviews] = usePersist<Review[]>('reviews', []);
+  const [profiles, setProfiles] = usePersist<Record<string, Profile>>('profiles', {});
+  const [cityAnon, setCityAnon] = usePersist<number>('city', 0);
+  const [clubAll, setClubAll] = usePersist<Record<string, boolean>>('club', {});
   const [toast, setToast] = useState<string | null>(null);
   const timer = useRef<number>();
 
@@ -122,12 +160,42 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return order;
   };
 
+  const cancelOrder = (no: string) =>
+    user && setOrdersAll((all) => ({ ...all, [user.id]: (all[user.id] || []).map((o) => (o.no === no ? { ...o, status: 'cancelled' } : o)) }));
+  const repeatOrder = (no: string) => {
+    const o = orders.find((x) => x.no === no);
+    o?.lines.forEach((l) => productById.has(l.id) && addToCart(l.id, l.qty));
+  };
+
+  // anonim foydalanuvchining arizalari ham saqlanadi ('guest')
+  const uid = user?.id || 'guest';
+  const requests = reqAll[uid] || [];
+  const addRequest: StoreCtx['addRequest'] = (r) => {
+    const req: Request = { ...r, id: String(Math.floor(100000 + Math.random() * 899999)), date: new Date().toISOString(), status: 'new' };
+    setReqAll((all) => ({ ...all, [uid]: [req, ...(all[uid] || [])] }));
+    return req;
+  };
+  const cancelRequest = (id: string) =>
+    setReqAll((all) => ({ ...all, [uid]: (all[uid] || []).map((r) => (r.id === id ? { ...r, status: 'cancelled' } : r)) }));
+
+  const addReview: StoreCtx['addReview'] = (r) =>
+    setReviews((list) => [{ ...r, id: String(Date.now()), date: new Date().toISOString(), author: user?.name || 'Mehmon' }, ...list]);
+
+  const profile: Profile = { phone: '', address: '', birthday: '', ...(user ? profiles[user.id] : {}), city: user ? profiles[user.id]?.city ?? cityAnon : cityAnon };
+  const setProfile = (p: Partial<Profile>) => {
+    if (p.city != null) setCityAnon(p.city);
+    if (user) setProfiles((all) => ({ ...all, [user.id]: { ...profile, ...all[user.id], ...p } }));
+  };
+  const club = !!(user && clubAll[user.id]);
+  const joinClub = () => user && setClubAll((c) => ({ ...c, [user.id]: true }));
+
   return (
     <Ctx.Provider
       value={{
         user, login, signInDemo, logout, loginOpen, setLoginOpen,
         cart: valid, addToCart, setQty, removeFromCart, clearCart, cartCount, cartTotal,
-        favs, toggleFav, cmp, toggleCmp, clearCmp, orders, placeOrder, toast, showToast,
+        favs, toggleFav, cmp, toggleCmp, clearCmp, orders, placeOrder, cancelOrder, repeatOrder,
+        requests, addRequest, cancelRequest, reviews, addReview, profile, setProfile, club, joinClub, toast, showToast,
       }}
     >
       {children}
