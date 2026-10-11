@@ -13,7 +13,11 @@ React + TypeScript + Vite asosidagi internet-do'kon. 3 tilda (O'zbekcha / Рус
 - Tovar sahifasi (variantlar, xususiyatlar), qidiruv (3 tilda ishlaydi)
 - Savat, buyurtma rasmiylashtirish (kuryer / olib ketish, karta / naqd), buyurtmalar tarixi
 - Sevimlilar, taqqoslash, shaxsiy kabinet, ballar
-- Aksiyalar, Xizmatlar, Yetkazib berish sahifalari
+- Aksiyalar (har biriga alohida sahifa), Do'konlar (8 shahar), Do'stlar klubi, Biznes uchun, Qaytarish, To'lov usullari, Kompaniya haqida, Qayta aloqa
+- 24 ta xizmat sahifasi va ariza formasi; ta'mir kalkulyatori, qurilish kalkulyatori, asbob ijarasi
+- Yetkazib berish narxi kalkulyatori (tuman, mashina, qavat, lift)
+- Qidiruvda takliflar, tovar sharhlari (reyting faqat haqiqiy sharhlardan), "qachon olish mumkin" filtri
+- Kabinet: shaxsiy ma'lumotlarni tahrirlash, buyurtmani bekor qilish va takrorlash, "Arizalarim"
 - Telefon va kompyuterga moslashgan
 
 ## Ishga tushirish
