@@ -26,7 +26,10 @@ function SafeMain({ children }: { children: ReactNode }) {
 
 function ScrollTop() {
   const { pathname, search } = useLocation();
-  useEffect(() => window.scrollTo(0, 0), [pathname, search]);
+  useEffect(() => {
+    // Natija qaytarilmaydi: ba'zi brauzer kengaytmalari scrollTo'ni o'zgartirib, funksiya bo'lmagan qiymat qaytaradi
+    window.scrollTo(0, 0);
+  }, [pathname, search]);
   return null;
 }
 

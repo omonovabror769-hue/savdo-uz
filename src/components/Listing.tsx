@@ -25,7 +25,9 @@ export default function Listing({ items, aside, banner }: { items: Product[]; as
   const [brandsAll, setBrandsAll] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  useEffect(() => storage.set('view', view), [view]);
+  useEffect(() => {
+    storage.set('view', view);
+  }, [view]);
   useEffect(() => {
     setBrands([]); setMinP(''); setMaxP(''); setOnlyStock(false); setOnlyDisc(false); setOnlyNew(false); setWhen('any'); setLimit(PAGE);
   }, [items]);

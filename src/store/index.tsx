@@ -78,7 +78,9 @@ const Ctx = createContext<StoreCtx>(null as unknown as StoreCtx);
 
 function usePersist<T>(key: string, init: T) {
   const [v, setV] = useState<T>(() => storage.get<T>(key, init));
-  useEffect(() => storage.set(key, v), [key, v]);
+  useEffect(() => {
+    storage.set(key, v);
+  }, [key, v]);
   return [v, setV] as const;
 }
 
