@@ -45,6 +45,18 @@ Client ID qo'shilmaguncha sayt **demo rejimda** ishlaydi: "Google orqali kirish"
 
 > Muhim: hozir foydalanuvchi ma'lumotlari brauzerda saqlanadi (backend yo'q). Haqiqiy savdo uchun backend qo'shganda Google'dan kelgan ID tokenni serverda tekshirish kerak.
 
+## Yopiq rejim (sayt tayyor bo'lguncha)
+
+`src/config.ts` faylida:
+
+```ts
+export const PRIVATE_MODE = true;          // false — sayt hamma uchun ochiladi
+export const ALLOWED_EMAILS = ['omonovabror769@gmail.com', 'yana.biri@gmail.com'];
+```
+
+Yopiq rejim faqat Google Client ID ulanganda ishlaydi. Google Cloud'da ilovani "Testing" holatida qoldirib, **Audience → Test users** ga shu Gmail'larni qo'shing.
+Eslatma: bu himoya saytni oddiy tashrif buyuruvchilardan yashiradi, lekin repozitoriy ochiq (public) bo'lsa, kod va katalog GitHub'da ko'rinadi.
+
 ## GitHub'ga joylash
 
 ```bash

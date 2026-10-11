@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-import { GOOGLE_CLIENT_ID as CONFIG_ID } from '../config';
+import { ALLOWED_EMAILS, GOOGLE_CLIENT_ID as CONFIG_ID, PRIVATE_MODE } from '../config';
 
 // Ustuvorlik: build paytidagi VITE_GOOGLE_CLIENT_ID → src/config.ts → window.SAVDO_CONFIG
 export const GOOGLE_CLIENT_ID: string =
@@ -29,6 +29,10 @@ export const GOOGLE_CLIENT_ID: string =
 const PREVIEW = import.meta.env.VITE_ROUTER === 'memory';
 
 export const isDemo = PREVIEW || !GOOGLE_CLIENT_ID;
+
+/** Yopiq rejim faqat haqiqiy Google kirish ulanganda yoqiladi (aks holda hech kim kira olmay qolardi) */
+export const gateOn = PRIVATE_MODE && !isDemo;
+export const isAllowed = (email?: string) => !!email && ALLOWED_EMAILS.map((e) => e.toLowerCase()).includes(email.toLowerCase());
 
 let loading: Promise<void> | null = null;
 export function loadGis(): Promise<void> {

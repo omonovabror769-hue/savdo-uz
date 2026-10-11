@@ -5,7 +5,6 @@ import { HashRouter, MemoryRouter, Route, Routes, useLocation } from 'react-rout
 // GitHub Pages va oddiy brauzerda — HashRouter (#/catalog/... ko'rinishidagi manzillar).
 const Router = import.meta.env.VITE_ROUTER === 'memory' ? MemoryRouter : HashRouter;
 import { I18nProvider } from './i18n';
-import { StoreProvider } from './store';
 import Header from './components/Header';
 import { FeedbackBar, Footer, LangModal, LoginModal, Toast } from './components/ui';
 import Home from './pages/Home';
@@ -18,10 +17,21 @@ import { ServicePage, Services } from './pages/Services';
 import { About, B2B, Club, Feedback, Payment, PromoPage, Returns, Stores } from './pages/Info';
 import NotFound from './pages/NotFound';
 import ErrorBoundary from './components/ErrorBoundary';
+import Gate from './components/Gate';
+import { StoreProvider, useStore } from './store';
+import { gateOn, isAllowed } from './store/auth';
 
 function SafeMain({ children }: { children: ReactNode }) {
   const { pathname, search } = useLocation();
   return <ErrorBoundary resetKey={pathname + search}>{children}</ErrorBoundary>;
+}
+
+/** Yopiq rejimda ruxsat berilmaganlarga sayt o'rniga kirish oynasi ko'rsatiladi */
+function Guard({ children }: { children: ReactNode }) {
+  const { user } = useStore();
+  if (!gateOn) return <>{children}</>;
+  if (user && isAllowed(user.email)) return <>{children}</>;
+  return <Gate denied={!!user} />;
 }
 
 function ScrollTop() {
@@ -39,6 +49,7 @@ export default function App() {
     <I18nProvider>
       <StoreProvider>
         <Router>
+        <Guard>
           <ScrollTop />
           <Header />
           <main>
@@ -78,6 +89,7 @@ export default function App() {
           <LoginModal />
           <LangModal />
           <Toast />
+        </Guard>
         </Router>
       </StoreProvider>
     </I18nProvider>

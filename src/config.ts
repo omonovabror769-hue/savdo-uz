@@ -4,3 +4,13 @@
 // Bu maxfiy kalit EMAS: u har doim brauzerga ochiq yuboriladi, shuning uchun kodda saqlash xavfsiz.
 // Bo'sh qolsa, sayt demo rejimida ishlaydi.
 export const GOOGLE_CLIENT_ID = '';
+
+// YOPIQ REJIM: true bo'lsa, saytni faqat quyidagi ro'yxatdagi Gmail'lar ko'radi.
+// Sayt tayyor bo'lgach false qiling — hamma uchun ochiladi.
+// (Faqat haqiqiy Google kirish ulanganda ishlaydi, ya'ni GOOGLE_CLIENT_ID to'ldirilgan bo'lsa.)
+export const PRIVATE_MODE = true;
+
+// Ruxsat berilgan Gmail'lar (kichik harflarda). Yangi odam qo'shish uchun shu ro'yxatga yozing.
+export const ALLOWED_EMAILS: string[] = [
+  'omonovabror769@gmail.com',
+];
