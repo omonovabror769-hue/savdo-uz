@@ -715,3 +715,17 @@ h1, h2, h3 { text-wrap: balance; }
 .gate-box { width: 100%; max-width: 440px; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.08); }
 .gate-box h1 { margin: 8px 0 0; font-size: 24px; }
 .gate-box p { margin: 0; }
+
+/* ===== Tuzatish: matnlar har qanday tilda sig'ishi ===== */
+/* Yuqori kategoriya menyusi: sig'masa ikkinchi qatorga o'tadi, hech narsa kesilmaydi */
+@media (min-width: 721px) {
+  .catnav-row { flex-wrap: wrap; overflow: visible; column-gap: 12px; row-gap: 0; padding-block: 2px; }
+  .catnav-row a { font-size: 12.5px; }
+  .catnav-row a { flex: none; }
+}
+.chip-brand { flex: none; white-space: nowrap; line-height: 1.5; }
+/* Tovar kartasi: son tanlagich va "Savatga" tugmasi ustma-ust, ikkalasi to'liq kenglikda */
+.pcard .buy { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 6px; }
+.pcard .buy .qty { width: 100%; justify-content: space-between; }
+.pcard .buy .qty input { flex: 1; }
+.pcard .buy .btn { width: 100%; flex: none; padding: 0 10px; }
