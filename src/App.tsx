@@ -1,5 +1,9 @@
 import { useEffect } from 'react';
-import { HashRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { HashRouter, MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+
+// Claude ichidagi ko'rib chiqish oynasida manzil satri o'zgarmasligi kerak — u yerda MemoryRouter ishlatiladi.
+// GitHub Pages va oddiy brauzerda — HashRouter (#/catalog/... ko'rinishidagi manzillar).
+const Router = import.meta.env.VITE_ROUTER === 'memory' ? MemoryRouter : HashRouter;
 import { I18nProvider } from './i18n';
 import { StoreProvider } from './store';
 import Header from './components/Header';
@@ -24,7 +28,7 @@ export default function App() {
   return (
     <I18nProvider>
       <StoreProvider>
-        <HashRouter>
+        <Router>
           <ScrollTop />
           <Header />
           <main>
@@ -62,7 +66,7 @@ export default function App() {
           <LoginModal />
           <LangModal />
           <Toast />
-        </HashRouter>
+        </Router>
       </StoreProvider>
     </I18nProvider>
   );

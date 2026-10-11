@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom';
 import { useI18n } from '../i18n';
-import { catById, categories, products, productsOfCat, productsOfSub, searchProducts, subById } from '../data/catalog';
+import { catById, categories, products, productsOfCat, productsOfSub, countOfSub, searchProducts, subById } from '../data/catalog';
 import { promos } from '../data/content';
 import { Crumbs, SeoBlock, Thumb } from '../components/ui';
 import Listing from '../components/Listing';
@@ -33,7 +33,7 @@ export function CategoryPage() {
               <Link key={s.id} to={`/catalog/${cat.id}/${s.id}`} className="tile">
                 <Thumb emoji={s.e} catId={cat.id} size="md" />
                 <span>{tr(s.n)}</span>
-                <small className="muted">{productsOfSub(s.id).length} {t('goods')}</small>
+                <small className="muted">{countOfSub(s.id)} {t('goods')}</small>
               </Link>
             ))}
           </div>
@@ -98,7 +98,7 @@ export function SubPage() {
             <h4><Link to={`/catalog/${cat.id}`}>{tr(cat.n)}</Link></h4>
             {cat.subs.map((s) => (
               <NavLink key={s.id} to={`/catalog/${cat.id}/${s.id}`} className="fnav" end>
-                {tr(s.n)} <span className="cnt">{productsOfSub(s.id).length}</span>
+                {tr(s.n)} <span className="cnt">{countOfSub(s.id)}</span>
               </NavLink>
             ))}
           </div>

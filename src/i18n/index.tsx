@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { L3, UnitKey } from '../data/types';
 import { storage } from '../store/storage';
 
@@ -221,17 +221,21 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     setChosen(true);
     storage.set('lang', l);
   };
-  const i = idx[lang];
-  const nf = new Intl.NumberFormat('ru-RU');
-  const value: Ctx = {
+  const value: Ctx = useMemo(() => {
+    const i = idx[lang];
+    const nf = new Intl.NumberFormat('ru-RU');
+    return {
     lang,
     setLang,
     chosen,
     t: (k) => dict[k][i],
     tr: (v) => v[i],
     unit: (u) => units[u][i],
-    money: (n) => `${nf.format(n).replace(/[\u00a0\u202f]/g, ' ')} ${dict.sum[i]}`,
-  };
+    money: (n: number) => `${nf.format(n).replace(/[\u00a0\u202f]/g, ' ')} ${dict.sum[i]}`,
+    };
+    // setLang barqaror emas, lekin u faqat holatni o'zgartiradi
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang, chosen]);
   return <I18nCtx.Provider value={value}>{children}</I18nCtx.Provider>;
 }
 

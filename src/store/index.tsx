@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { showToast } from './toast';
 import { storage } from './storage';
 import { demoUser, googleSignOut, initGoogle, isDemo, type User } from './auth';
 import { productById } from '../data/catalog';
@@ -70,7 +71,6 @@ interface StoreCtx {
   setProfile: (p: Partial<Profile>) => void;
   club: boolean;
   joinClub: () => void;
-  toast: string | null;
   showToast: (s: string) => void;
 }
 
@@ -94,14 +94,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [profiles, setProfiles] = usePersist<Record<string, Profile>>('profiles', {});
   const [cityAnon, setCityAnon] = usePersist<number>('city', 0);
   const [clubAll, setClubAll] = usePersist<Record<string, boolean>>('club', {});
-  const [toast, setToast] = useState<string | null>(null);
-  const timer = useRef<number>();
-
-  const showToast = useCallback((s: string) => {
-    setToast(s);
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setToast(null), 2200);
-  }, []);
 
   const onGoogleUser = useCallback(
     (u: User) => {
@@ -209,7 +201,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         user, login, signInDemo, logout, loginOpen, setLoginOpen,
         cart: valid, addToCart, setQty, removeFromCart, clearCart, cartCount, cartTotal,
         favs, toggleFav, cmp, toggleCmp, clearCmp, orders, placeOrder, cancelOrder, repeatOrder,
-        requests, addRequest, cancelRequest, reviews, addReview, ratingOf, profile, setProfile, club, joinClub, toast, showToast,
+        requests, addRequest, cancelRequest, reviews, addReview, ratingOf, profile, setProfile, club, joinClub, showToast,
       }}
     >
       {children}

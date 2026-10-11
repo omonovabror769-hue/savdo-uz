@@ -1,4 +1,5 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { subscribeToast } from '../store/toast';
 import { Link } from 'react-router-dom';
 import { LANGS, useI18n } from '../i18n';
 import { useStore } from '../store';
@@ -154,7 +155,8 @@ export function LangModal() {
 }
 
 export function Toast() {
-  const { toast } = useStore();
+  const [toast, setToast] = useState<string | null>(null);
+  useEffect(() => subscribeToast(setToast), []);
   const last = useRef('');
   if (toast) last.current = toast;
   return (

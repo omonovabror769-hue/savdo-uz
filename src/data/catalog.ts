@@ -96,11 +96,23 @@ export const catById = new Map(categories.map((c) => [c.id, c]));
 export const subById = new Map<string, { sub: SubCat; cat: Category }>();
 categories.forEach((cat) => cat.subs.forEach((sub) => subById.set(sub.id, { sub, cat })));
 
+const bySub = new Map<string, Product[]>();
+const byCat = new Map<string, Product[]>();
+products.forEach((p) => {
+  if (!bySub.has(p.subId)) bySub.set(p.subId, []);
+  if (!byCat.has(p.catId)) byCat.set(p.catId, []);
+  bySub.get(p.subId)!.push(p);
+  byCat.get(p.catId)!.push(p);
+});
+// Nusxa qaytaramiz — chaqiruvchi .sort() qilsa ham asl ro'yxat buzilmaydi
 export function productsOfSub(subId: string) {
-  return products.filter((p) => p.subId === subId);
+  return [...(bySub.get(subId) || [])];
 }
 export function productsOfCat(catId: string) {
-  return products.filter((p) => p.catId === catId);
+  return [...(byCat.get(catId) || [])];
+}
+export function countOfSub(subId: string) {
+  return bySub.get(subId)?.length || 0;
 }
 
 export function searchProducts(q: string): Product[] {

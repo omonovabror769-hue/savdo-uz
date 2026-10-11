@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEven
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LANGS, useI18n } from '../i18n';
 import { useStore } from '../store';
-import { categories, productsOfSub, searchProducts } from '../data/catalog';
+import { categories, countOfSub, searchProducts } from '../data/catalog';
 import { Thumb } from './ui';
 import { cities } from '../data/content';
 import {
@@ -97,7 +97,7 @@ function MegaMenu({ onClose }: { onClose: () => void }) {
                     </li>
                   ))}
                 </ul>
-                <span className="cnt-all">{productsOfSub(s.id).length} {t('goods')}</span>
+                <span className="cnt-all">{countOfSub(s.id)} {t('goods')}</span>
               </div>
             ))}
           </div>
