@@ -6,6 +6,8 @@ import { seenTexts, textOverrides, translate, logo as logoNow, type NewProduct }
 import { readImage } from './images';
 import { useAdmin } from './AdminProvider';
 import { Modal } from '../components/ui';
+import { PRESETS, isHex, normHex } from './color';
+import { applyTheme, type Theme } from './content';
 
 export type EditTarget =
   | { type: 'text'; key: string }
@@ -15,7 +17,8 @@ export type EditTarget =
   | { type: 'promo'; id: string }
   | { type: 'service'; id: string }
   | { type: 'slide'; id: string }
-  | { type: 'logo' };
+  | { type: 'logo' }
+  | { type: 'theme' };
 
 /* ---------------- 3 tilli matn maydoni: o'zbekchani yozsangiz ruscha va inglizcha o'zi tarjima bo'ladi ---------------- */
 export function L3Field({ label, value, onChange, multiline }: { label: string; value: L3; onChange: (v: L3) => void; multiline?: boolean }) {
@@ -65,6 +68,46 @@ export function L3Field({ label, value, onChange, multiline }: { label: string; 
       <label className="l3-row"><span>🇬🇧 EN</span><Input value={v[2]} onChange={(e) => { setManual((m) => ({ ...m, en: true })); setV([v[0], v[1], e.target.value]); }} rows={3} /></label>
       <p className="muted tiny">O'zbekchasini yozing — ruscha va inglizcha avtomatik tarjima bo'ladi. Kerak bo'lsa ularni qo'lda tuzating.</p>
       {note && <p className="err tiny">{note}</p>}
+    </div>
+  );
+}
+
+/* ---------------- Rang maydoni: palitra, hex kod va tayyor ranglar ---------------- */
+export function ColorField({ label, value, onChange, placeholder, hint }: { label: string; value?: string; onChange: (v?: string) => void; placeholder: string; hint?: string }) {
+  const [txt, setTxt] = useState(value || '');
+  const cur = value && isHex(value) ? normHex(value) : placeholder;
+  return (
+    <div className="colf">
+      <div className="colf-head">
+        <b>{label}</b>
+        {value ? <button type="button" className="link-btn small" onClick={() => { setTxt(''); onChange(undefined); }}>Standart rangga qaytarish</button> : <span className="muted tiny">standart</span>}
+      </div>
+      {hint && <p className="muted tiny">{hint}</p>}
+      <div className="colf-row">
+        <label className="colf-swatch" style={{ background: cur }} title="Palitradan tanlash">
+          <input type="color" value={cur} onChange={(e) => { setTxt(e.target.value); onChange(e.target.value); }} />
+        </label>
+        <input
+          className="colf-hex"
+          value={txt}
+          placeholder={placeholder}
+          maxLength={7}
+          onChange={(e) => {
+            const v = e.target.value.trim();
+            setTxt(v);
+            const h = v.startsWith('#') ? v : '#' + v;
+            if (isHex(h)) onChange(normHex(h));
+          }}
+        />
+        <span className={'tiny ' + (txt && !isHex(txt.startsWith('#') ? txt : '#' + txt) ? 'err' : 'muted')}>
+          {txt && !isHex(txt.startsWith('#') ? txt : '#' + txt) ? "Kod noto'g'ri. Masalan: #e31e24" : 'Kod: #RRGGBB'}
+        </span>
+      </div>
+      <div className="colf-presets">
+        {PRESETS.map((p) => (
+          <button key={p.hex} type="button" title={`${p.name} ${p.hex}`} className={'colf-p' + (cur === p.hex ? ' on' : '')} style={{ background: p.hex }} onClick={() => { setTxt(p.hex); onChange(p.hex); }} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -136,6 +179,7 @@ export default function Editor({ target, onClose }: { target: EditTarget; onClos
   if (target.type === 'service') return <ServiceEditor id={target.id} onClose={onClose} />;
   if (target.type === 'promo') return <PromoEditor id={target.id} onClose={onClose} />;
   if (target.type === 'slide') return <SlideEditor id={target.id} onClose={onClose} />;
+  if (target.type === 'theme') return <ThemeEditor onClose={onClose} />;
   return null;
 }
 
@@ -195,14 +239,20 @@ function PromoEditor({ id, onClose }: { id: string; onClose: () => void }) {
   const [title, setTitle] = useState<L3>(p?.title || ['', '', '']);
   const [text, setText] = useState<L3>(p?.text || ['', '', '']);
   const [img, setImg] = useState(p?.img);
+  const [bg, setBg] = useState(draft.promos[id]?.bg);
+  const [fg, setFg] = useState(draft.promos[id]?.fg);
   if (!p) return null;
   return (
     <Shell title="Aksiya" onClose={onClose}
-      onSave={() => { update((d) => { d.promos[id] = { title, text, img }; }); onClose(); }}
+      onSave={() => { update((d) => { d.promos[id] = { title, text, img, bg, fg }; }); onClose(); }}
       onReset={draft.promos[id] ? () => { update((d) => { delete d.promos[id]; }); onClose(); } : undefined}>
       <L3Field label="Sarlavha" value={title} onChange={setTitle} />
       <L3Field label="Matn" value={text} onChange={setText} multiline />
       <ImageField label="Banner rasmi (16:9 tavsiya etiladi)" value={img} onChange={setImg} />
+      <div className="grid2">
+        <ColorField label="Banner foni rangi" value={bg} onChange={setBg} placeholder="#e31e24" />
+        <ColorField label="Banner yozuvi rangi" value={fg} onChange={setFg} placeholder="#ffffff" hint="Bo'sh qolsa, fonga qarab avtomatik tanlanadi" />
+      </div>
     </Shell>
   );
 }
@@ -214,13 +264,19 @@ function SlideEditor({ id, onClose }: { id: string; onClose: () => void }) {
   const [t, setT] = useState<L3>(cur.t || base?.t || ['', '', '']);
   const [s, setS] = useState<L3>(cur.s || base?.s || ['', '', '']);
   const [img, setImg] = useState(cur.img);
+  const [bg, setBg] = useState(cur.bg);
+  const [fg, setFg] = useState(cur.fg);
   return (
     <Shell title={`Bosh sahifa banneri №${+id + 1}`} onClose={onClose}
-      onSave={() => { update((d) => { d.slides[id] = { t, s, img }; }); onClose(); }}
+      onSave={() => { update((d) => { d.slides[id] = { t, s, img, bg, fg }; }); onClose(); }}
       onReset={draft.slides[id] ? () => { update((d) => { delete d.slides[id]; }); onClose(); } : undefined}>
       <L3Field label="Sarlavha" value={t} onChange={setT} />
       <L3Field label="Qisqa matn" value={s} onChange={setS} multiline />
       <ImageField label="O'ngdagi rasm" value={img} onChange={setImg} alpha />
+      <div className="grid2">
+        <ColorField label="Banner foni rangi" value={bg} onChange={setBg} placeholder="#e31e24" />
+        <ColorField label="Yozuv rangi" value={fg} onChange={setFg} placeholder="#ffffff" />
+      </div>
     </Shell>
   );
 }
@@ -316,6 +372,37 @@ function ProductEditor({ target, onClose }: { target: { type: 'product'; id: str
         <label className="chk"><input type="checkbox" checked={hidden} onChange={(e) => setHidden(e.target.checked)} /> Tovarni saytdan yashirish</label>
       )}
       {err && <p className="err">{err}</p>}
+    </Shell>
+  );
+}
+
+/* ---------------- Sayt ranglari ---------------- */
+function ThemeEditor({ onClose }: { onClose: () => void }) {
+  const { update, draft } = useAdmin();
+  const [t, setT] = useState<Theme>({ ...draft.theme });
+  const set = (k: keyof Theme) => (v?: string) => {
+    const n = { ...t, [k]: v };
+    if (!v) delete n[k];
+    setT(n);
+    applyTheme(n); // darhol ko'rinadi
+  };
+  const close = () => {
+    applyTheme(draft.theme); // bekor qilinsa — avvalgi ranglar
+    onClose();
+  };
+  return (
+    <Shell title="🎨 Sayt ranglari" onClose={close}
+      onSave={() => { update((d) => { d.theme = t; }); onClose(); }}
+      onReset={Object.keys(draft.theme).length ? () => { update((d) => { d.theme = {}; }); onClose(); } : undefined}>
+      <p className="muted small">Rang tanlanishi bilan sayt orqa fonda darhol o'zgaradi. "Saqlash" bosilmasa, avvalgi ranglar qaytadi. Tugmalardagi yozuv rangi (oq yoki qora) avtomatik tanlanadi.</p>
+      <ColorField label="Asosiy rang" value={t.brand} onChange={set('brand')} placeholder="#e31e24" hint="Tugmalar, logotip, qidiruv, tanlangan filtrlar, chegirma narxi" />
+      <div className="grid2">
+        <ColorField label="Matn rangi" value={t.ink} onChange={set('ink')} placeholder="#1b1b1d" />
+        <ColorField label="Sahifa foni" value={t.bg} onChange={set('bg')} placeholder="#ffffff" />
+        <ColorField label="Pastki qism (footer)" value={t.footer} onChange={set('footer')} placeholder="#2a2c31" />
+        <ColorField label={'"Bugun mavjud" yashil rangi'} value={t.green} onChange={set('green')} placeholder="#16a34a" />
+        <ColorField label="Reyting yulduzchalari" value={t.star} onChange={set('star')} placeholder="#ffb800" />
+      </div>
     </Shell>
   );
 }

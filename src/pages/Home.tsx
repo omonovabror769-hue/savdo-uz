@@ -8,6 +8,7 @@ import { IconChevron } from '../components/Icons';
 import { PromoCard } from './Promos';
 import { Pic } from '../components/ui';
 import { slideOverrides } from '../admin/content';
+import { mix } from '../admin/color';
 
 
 
@@ -25,7 +26,7 @@ export default function Home() {
   const news = useMemo(() => products.filter((p) => !p.hidden && p.isNew).slice(0, 10), []);
   const base = slides[slide];
   const ov = slideOverrides[String(slide)] || {};
-  const sl = { ...base, t: ov.t || base.t, s: ov.s || base.s, img: ov.img };
+  const sl = { ...base, t: ov.t || base.t, s: ov.s || base.s, img: ov.img, bg: ov.bg ? `linear-gradient(110deg, ${ov.bg} 0%, ${ov.bg} 55%, ${mix(ov.bg, -0.25)} 100%)` : base.bg, fg: ov.fg || base.fg };
 
   return (
     <div className="container page">

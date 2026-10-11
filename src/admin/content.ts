@@ -3,6 +3,7 @@
 import type { L3, Product, UnitKey } from '../data/types';
 import { addProductToCatalog, categories, products, productById, subById } from '../data/catalog';
 import { promos, services } from '../data/content';
+import { isHex, mix, normHex, textOn } from './color';
 
 export interface ProductPatch {
   n?: L3;
@@ -32,14 +33,18 @@ export interface Content {
   products: Record<string, ProductPatch>;
   newProducts: NewProduct[];
   cats: Record<string, { n?: L3; img?: string }>; // kategoriya va kichik kategoriya id lari
-  promos: Record<string, { title?: L3; text?: L3; img?: string }>;
+  promos: Record<string, { title?: L3; text?: L3; img?: string; bg?: string; fg?: string }>;
   services: Record<string, { n?: L3; img?: string }>;
-  slides: Record<string, { t?: L3; s?: L3; img?: string }>;
+  slides: Record<string, { t?: L3; s?: L3; img?: string; bg?: string; fg?: string }>;
   logo: { word?: string; suffix?: string; img?: string };
+  theme: Theme;
 }
 
+/** Saytning asosiy ranglari (bo'sh bo'lsa — standart) */
+export interface Theme { brand?: string; ink?: string; bg?: string; footer?: string; green?: string; star?: string }
+
 export const emptyContent = (): Content => ({
-  v: 1, texts: {}, products: {}, newProducts: [], cats: {}, promos: {}, services: {}, slides: {}, logo: {},
+  v: 1, texts: {}, products: {}, newProducts: [], cats: {}, promos: {}, services: {}, slides: {}, logo: {}, theme: {},
 });
 
 export function normalize(c: Partial<Content> | null | undefined): Content {
@@ -54,6 +59,7 @@ export function normalize(c: Partial<Content> | null | undefined): Content {
     services: { ...(c?.services || {}) },
     slides: { ...(c?.slides || {}) },
     logo: { ...(c?.logo || {}) },
+    theme: { ...(c?.theme || {}) },
   };
 }
 
@@ -90,7 +96,7 @@ function takeBaseline() {
     baseCats.set(c.id, snap(c, ['n', 'img']));
     c.subs.forEach((s) => baseCats.set(s.id, snap(s, ['n', 'img'])));
   });
-  promos.forEach((p) => basePromos.set(p.id, snap(p, ['title', 'text', 'img'])));
+  promos.forEach((p) => basePromos.set(p.id, snap(p, ['title', 'text', 'img', 'bg', 'fg'])));
   services.forEach((s) => baseServices.set(s.id, snap(s, ['n', 'img'])));
   baselineTaken = true;
 }
@@ -155,6 +161,11 @@ export function applyContent(c: Content) {
     if (o.title) p.title = o.title;
     if (o.text) p.text = o.text;
     if (o.img) p.img = o.img;
+    if (o.bg && isHex(o.bg)) {
+      p.bg = `linear-gradient(135deg, ${normHex(o.bg)}, ${mix(o.bg, -0.25)})`;
+      p.fg = o.fg || textOn(o.bg);
+    }
+    if (o.fg && isHex(o.fg)) p.fg = normHex(o.fg);
   });
   Object.entries(c.services).forEach(([id, o]) => {
     const s = services.find((x) => x.id === id);
@@ -167,6 +178,28 @@ export function applyContent(c: Content) {
   Object.entries(c.texts).forEach(([k, v]) => textOverrides.set(k, v));
   logo = c.logo;
   slideOverrides = c.slides;
+  applyTheme(c.theme);
+}
+
+/** Ranglarni sahifaning CSS o'zgaruvchilariga yozish */
+export function applyTheme(t: Theme) {
+  const st = document.documentElement.style;
+  const set = (k: string, v?: string) => (v ? st.setProperty(k, v) : st.removeProperty(k));
+  const b = t.brand && isHex(t.brand) ? normHex(t.brand) : undefined;
+  set('--brand', b);
+  set('--red', b);
+  set('--brand-2', b && mix(b, -0.15));
+  set('--brand-soft', b && mix(b, 0.9));
+  set('--brand-line', b && mix(b, 0.72));
+  set('--on-brand', b && textOn(b));
+  set('--ink', t.ink && isHex(t.ink) ? normHex(t.ink) : undefined);
+  set('--bg', t.bg && isHex(t.bg) ? normHex(t.bg) : undefined);
+  const f = t.footer && isHex(t.footer) ? normHex(t.footer) : undefined;
+  set('--footer', f);
+  set('--footer-head', f && textOn(f));
+  set('--footer-ink', f && (textOn(f) === '#ffffff' ? mix(f, 0.75) : mix(f, -0.6)));
+  set('--green', t.green && isHex(t.green) ? normHex(t.green) : undefined);
+  set('--star', t.star && isHex(t.star) ? normHex(t.star) : undefined);
 }
 
 /** Sayt ochilishida content.json ni yuklash (2 soniyadan ko'p kutmaydi) */

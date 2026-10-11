@@ -183,12 +183,13 @@ export function AdminProvider({ initial, children }: { initial: Content; childre
 }
 
 function AdminBar() {
-  const { editing, setEditing, dirty, publish, publishing, discard } = useAdmin();
+  const { editing, setEditing, dirty, publish, publishing, discard, open } = useAdmin();
   return (
     <div className={'admin-bar' + (editing ? ' on' : '')} data-admin-ui>
       <button className={'ab-toggle' + (editing ? ' on' : '')} onClick={() => setEditing(!editing)} title="Tahrirlash rejimi">
         ✏️ {editing ? 'Tahrirlash: YONIQ' : 'Tahrirlash'}
       </button>
+      <button className="ab-link" onClick={() => open({ type: 'theme' })}>🎨 Ranglar</button>
       <Link to="/admin" className="ab-link" onClick={() => setEditing(false)}>⚙️ Admin panel</Link>
       {dirty && (
         <>

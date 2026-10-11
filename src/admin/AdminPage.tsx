@@ -10,13 +10,13 @@ import NotFound from '../pages/NotFound';
 type Tab = 'start' | 'texts' | 'products' | 'github';
 
 export default function AdminPage() {
-  const { isAdmin, draft, dirty, publish, publishing, setEditing } = useAdmin();
+  const { isAdmin, draft, dirty, publish, publishing, setEditing, open } = useAdmin();
   const [tab, setTab] = useState<Tab>(getToken() ? 'start' : 'github');
   if (!isAdmin) return <NotFound />;
   const count =
     Object.keys(draft.texts).length + Object.keys(draft.products).length + draft.newProducts.length +
     Object.keys(draft.cats).length + Object.keys(draft.promos).length + Object.keys(draft.services).length +
-    Object.keys(draft.slides).length + (Object.keys(draft.logo).length ? 1 : 0);
+    Object.keys(draft.slides).length + (Object.keys(draft.logo).length ? 1 : 0) + Object.keys(draft.theme).length;
 
   return (
     <div className="container page admin-page" data-admin-ui>
@@ -42,6 +42,7 @@ export default function AdminPage() {
           </ol>
           <div className="row-gap left">
             <button className="btn btn-brand" onClick={() => { setEditing(true); location.hash = '#/'; }}>✏️ Tahrirlashni boshlash</button>
+            <button className="btn btn-ghost" onClick={() => open({ type: 'theme' })}>🎨 Sayt ranglari</button>
             {dirty && <button className="btn btn-ghost" onClick={publish} disabled={publishing}>{publishing ? 'Yuklanmoqda…' : '🚀 Nashr qilish'}</button>}
           </div>
         </div>
