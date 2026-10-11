@@ -1,0 +1,77 @@
+import type { Category } from '../types';
+
+const c: Category = {
+  id: 'plumbing', e: '🚿', n: ["Santexnika", "Сантехника", "Plumbing"],
+  subs: [
+    { id: 'plumbing-toilets', e: '🚽', n: ["Unitazlar va installyatsiyalar", "Унитазы и инсталляции", "Toilets & installations"], items: [
+      { n: ["Kompakt unitaz", "Унитаз компакт", "Compact toilet"], u: 'pc', e: '🚽',
+        v: [["360x640 mm", 1650000], ["370x670 mm", 2350000], ["365x700 mm", 3200000]], b: ["Cersanit", "Vitra", "Samarqand Santexnika"] },
+      { n: ["Osma unitaz", "Унитаз подвесной", "Wall-hung toilet"], u: 'pc', e: '🚽',
+        v: [["355x530 mm", 2100000], ["360x540 mm", 3100000], ["375x560 mm", 4500000]], b: ["Roca", "Ideal Standard", "Vitra"] },
+      { n: ["Unitaz uchun installyatsiya tizimi", "Инсталляция для подвесного унитаза", "In-wall toilet frame system"], u: 'set', e: '🧰',
+        v: [["1120x500 mm", 1850000], ["1160x500 mm", 2600000]], b: ["Geberit", "Cersanit", "Am.Pm"] },
+      { n: ["Unitaz o'rindig'i (Soft Close)", "Сиденье для унитаза с микролифтом", "Soft-close toilet seat"], u: 'pc', e: '🪑',
+        v: [["440 mm", 260000], ["460 mm", 420000], ["450 mm DP", 590000]], b: ["Cersanit", "Vitra", "Imzo"] },
+    ]},
+    { id: 'plumbing-basins', e: '🚰', n: ["Rakovinalar va tumbalar", "Раковины и тумбы", "Washbasins & vanity units"], items: [
+      { n: ["Osma rakovina", "Раковина подвесная", "Wall-hung washbasin"], u: 'pc', e: '🚰',
+        v: [["500x420 mm", 480000], ["600x450 mm", 720000], ["650x470 mm", 980000]], b: ["Cersanit", "Santek", "Samarqand Santexnika"] },
+      { n: ["Tumbali rakovina", "Раковина с тумбой", "Vanity unit with basin"], u: 'set', e: '🗄️',
+        v: [["600x450 mm", 1750000], ["800x460 mm", 2450000], ["1000x480 mm", 3600000]], b: ["Am.Pm", "Andijon Mebel", "Roca"] },
+      { n: ["Nakladnoy rakovina (kosa)", "Раковина-чаша накладная", "Countertop vessel basin"], u: 'pc', e: '🥣',
+        v: [["Ø410 mm", 620000], ["420x340 mm", 890000], ["Ø460 mm", 1250000]], b: ["Vitra", "Ideal Standard", "Santek"] },
+      { n: ["Rakovina uchun sifon", "Сифон для раковины", "Basin trap"], u: 'pc', e: '🔧',
+        v: [["1 1/4\" 32 mm", 55000], ["1 1/4\" 40 mm B", 120000], ["Ø32 mm Cr", 190000]], b: ["Wirquin", "Akfa", "Imzo"] },
+    ]},
+    { id: 'plumbing-baths', e: '🛁', n: ["Vannalar va dush kabinalari", "Ванны и душевые кабины", "Bathtubs & shower cabins"], items: [
+      { n: ["Akril vanna", "Акриловая ванна", "Acrylic bathtub"], u: 'pc', e: '🛁',
+        v: [["150x70 cm", 2600000], ["170x70 cm", 3200000], ["180x80 cm", 4600000]], b: ["Ravak", "Am.Pm", "Samarqand Santexnika"] },
+      { n: ["Dush kabinasi", "Душевая кабина", "Shower cabin"], u: 'set', e: '🚿',
+        v: [["90x90x215 cm", 5400000], ["100x100x215 cm", 6900000], ["120x80x215 cm", 8800000]], b: ["Niagara", "Cersanit", "Imzo"] },
+      { n: ["Dush poddoni", "Душевой поддон", "Shower tray"], u: 'pc', e: '⬜',
+        v: [["80x80 cm", 980000], ["90x90 cm", 1250000], ["120x80 cm", 1950000]], b: ["Roca", "Ravak", "Santek"] },
+      { n: ["Vanna uchun shisha parda", "Шторка на ванну стеклянная", "Glass bath screen"], u: 'pc', e: '🪟',
+        v: [["70x140 cm", 1150000], ["80x150 cm", 1650000]], b: ["Ravak", "Am.Pm", "Akfa"] },
+    ]},
+    { id: 'plumbing-mixers', e: '🚰', n: ["Smesitellar", "Смесители", "Mixers & taps"], items: [
+      { n: ["Rakovina uchun bir dastali smesitel", "Смеситель для раковины однорычажный", "Single-lever basin mixer"], u: 'pc', e: '🚰',
+        v: [["Ø35 mm, Cr", 420000], ["Ø40 mm, Cr", 690000], ["Ø40 mm H250", 1350000]], b: ["Grohe", "Hansgrohe", "Imzo"] },
+      { n: ["Oshxona uchun smesitel", "Смеситель для кухни", "Kitchen mixer tap"], u: 'pc', e: '🚰',
+        v: [["Ø35 mm, Cr", 480000], ["Ø40 mm S360", 820000], ["Ø40 mm P", 1900000]], b: ["Grohe", "Hansgrohe", "Akfa"] },
+      { n: ["Vanna va dush uchun smesitel", "Смеситель для ванны и душа", "Bath & shower mixer"], u: 'pc', e: '🛁',
+        v: [["150 mm, Cr", 560000], ["150 mm S2", 1100000], ["Ø40 mm T38", 2150000]], b: ["Am.Pm", "Hansgrohe", "Imzo"] },
+      { n: ["Dush to'plami (yomg'ir dush)", "Душевая стойка тропический душ", "Rain shower set"], u: 'set', e: '🚿',
+        v: [["Ø200 mm", 950000], ["Ø250 mm", 1650000], ["Ø300 mm", 2200000]], b: ["Grohe", "Hansgrohe", "Akfa"] },
+    ]},
+    { id: 'plumbing-sinks', e: '🍽️', n: ["Oshxona moykalari", "Мойки кухонные", "Kitchen sinks"], items: [
+      { n: ["Zanglamaydigan po'latdan moyka", "Мойка из нержавеющей стали", "Stainless steel sink"], u: 'pc', e: '🍽️',
+        v: [["500x500 mm", 480000], ["600x500 mm", 690000], ["780x430 mm", 950000]], b: ["Franke", "Imzo", "Akfa"] },
+      { n: ["Ikki kosali moyka", "Мойка двойная", "Double-bowl sink"], u: 'pc', e: '🍽️',
+        v: [["800x500 mm", 1150000], ["1000x500 mm", 1550000], ["1160x500 mm", 2100000]], b: ["Franke", "Blanco", "Akfa"] },
+      { n: ["Granit moyka", "Мойка из искусственного камня", "Granite composite sink"], u: 'pc', e: '🪨',
+        v: [["575x500 mm", 1250000], ["780x500 mm", 1750000], ["1000x500 mm", 2400000]], b: ["Blanco", "Franke", "Cersanit"] },
+      { n: ["Moyka uchun sifon", "Сифон для мойки", "Kitchen sink trap"], u: 'pc', e: '🔧',
+        v: [["Ø50 mm x1", 85000], ["Ø50 mm x2", 140000]], b: ["Wirquin", "Akfa", "Imzo"] },
+    ]},
+    { id: 'plumbing-warmers', e: '♨️', n: ["Sochiq quritgichlar", "Полотенцесушители", "Towel warmers"], items: [
+      { n: ["Suvli sochiq quritgich", "Полотенцесушитель водяной", "Water towel warmer"], u: 'pc', e: '♨️',
+        v: [["500x600 mm", 780000], ["500x800 mm", 980000], ["600x1000 mm", 1450000]], b: ["Terminus", "Sunerzha", "Akfa"] },
+      { n: ["Elektr sochiq quritgich", "Полотенцесушитель электрический", "Electric towel warmer"], u: 'pc', e: '⚡',
+        v: [["500x800 mm, 100 W", 1250000], ["500x1000 mm, 150 W", 1750000], ["600x1200 mm, 200 W", 2350000]], b: ["Terminus", "Margaroli", "Artel"] },
+      { n: ["Sochiq quritgich uchun ulash to'plami", "Комплект подключения полотенцесушителя", "Towel warmer connection kit"], u: 'set', e: '🔩',
+        v: [["1/2\" 90°", 145000], ["1/2\" 45°", 185000]], b: ["Valtec", "Akfa", "Imzo"] },
+    ]},
+    { id: 'plumbing-accessories', e: '🪞', n: ["Hammom aksessuarlari va ko'zgular", "Аксессуары для ванной и зеркала", "Bathroom accessories & mirrors"], items: [
+      { n: ["Hammom ko'zgusi LED yoritgichli", "Зеркало для ванной с LED-подсветкой", "LED bathroom mirror"], u: 'pc', e: '🪞',
+        v: [["600x800 mm", 980000], ["800x600 mm", 1250000], ["Ø700 mm", 1650000]], b: ["Cersanit", "Am.Pm", "Imzo"] },
+      { n: ["Hammom uchun javonli ko'zgu-shkaf", "Зеркальный шкаф для ванной", "Mirror cabinet"], u: 'pc', e: '🗄️',
+        v: [["600x700 mm", 1450000], ["800x700 mm", 1950000], ["1000x700 mm", 2650000]], b: ["Cersanit", "Andijon Mebel", "Roca"] },
+      { n: ["Hammom aksessuarlari to'plami", "Набор аксессуаров для ванной", "Bathroom accessories set"], u: 'set', e: '🧴',
+        v: [["4 pc, Cr", 320000], ["6 pc, Cr", 560000], ["5 pc, RAL 9005", 740000]], b: ["Am.Pm", "Grohe", "Imzo"] },
+      { n: ["Hojatxona qog'ozi ushlagichi", "Держатель туалетной бумаги", "Toilet paper holder"], u: 'pc', e: '🧻',
+        v: [["Cr", 85000], ["Cr, 160 mm", 140000], ["RAL 9005", 190000]], b: ["Am.Pm", "Tescoma", "Imzo"] },
+    ]},
+  ],
+};
+
+export default c;
