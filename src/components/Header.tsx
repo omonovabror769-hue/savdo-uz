@@ -4,7 +4,6 @@ import { LANGS, useI18n } from '../i18n';
 import { useStore } from '../store';
 import { categories, productsOfSub } from '../data/catalog';
 import { cities } from '../data/content';
-import { storage } from '../store/storage';
 import {
   IconCart, IconChevronDown, IconClose, IconCompare, IconHeart, IconMenu, IconPin, IconSearch, IconServices, IconUser, IconBox,
 } from './Icons';
@@ -33,9 +32,10 @@ function LangSwitch() {
 
 function CitySelect() {
   const { tr } = useI18n();
-  const [city, setCity] = useState<number>(() => storage.get('city', 0));
+  const { profile, setProfile } = useStore();
+  const city = profile.city;
+  const setCity = (i: number) => setProfile({ city: i });
   const [open, setOpen] = useState(false);
-  useEffect(() => storage.set('city', city), [city]);
   return (
     <div className="city">
       <button className="link-btn" onClick={() => setOpen((v) => !v)}>
@@ -139,16 +139,16 @@ export default function Header() {
       <div className="topbar">
         <div className="container topbar-row">
           <nav className="topbar-links">
-            <Link to="/services">{t('stores')}</Link>
+            <Link to="/stores">{t('stores')}</Link>
             <Link to="/delivery">{t('delivery')}</Link>
-            <Link to="/promos">{t('club')}</Link>
-            <Link to="/services">{t('b2b')}</Link>
-            <span className="muted">{t('allDay')} <b className="phone">+998 (71) 200-00-00</b></span>
+            <Link to="/club">{t('club')}</Link>
+            <Link to="/b2b">{t('b2b')}</Link>
+            <span className="muted">{t('allDay')} <a href="tel:+998712000000" className="phone">+998 (71) 200-00-00</a></span>
           </nav>
           <div className="topbar-right">
             <CitySelect />
             <LangSwitch />
-            <Link to="/account" className="orders-link"><IconBox size={14} /> {t('orders')}</Link>
+            <Link to="/account/orders" className="orders-link"><IconBox size={14} /> {t('orders')}</Link>
           </div>
         </div>
       </div>

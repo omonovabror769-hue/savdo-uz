@@ -45,13 +45,14 @@ export default function RequestForm({
   const submit = (e: FormEvent) => {
     e.preventDefault();
     for (const f of fields) {
-      const v = (vals[f.id] || '').trim();
-      if (f.required && (!v || v === '+998')) return setErr(`${tr(['To‘ldiring', 'Заполните поле', 'Please fill in'])}: ${tr(f.label)}`);
+      const raw = (vals[f.id] || '').trim();
+      const v = raw === '+998' ? '' : raw;
+      if (f.required && !v) return setErr(`${tr(['To‘ldiring', 'Заполните поле', 'Please fill in'])}: ${tr(f.label)}`);
       if (f.type === 'tel' && v && v.replace(/\D/g, '').length < 12) return setErr(`${tr(f.label)}: +998 XX XXX-XX-XX`);
     }
     setErr('');
     const data: Record<string, string> = { ...extra };
-    fields.forEach((f) => { if (vals[f.id]) data[tr(f.label)] = f.type === 'select' && f.options ? tr(f.options[+vals[f.id]] || f.options[0]) : vals[f.id]; });
+    fields.forEach((f) => { if (vals[f.id] && vals[f.id].trim() !== '+998') data[tr(f.label)] = f.type === 'select' && f.options ? tr(f.options[+vals[f.id]] || f.options[0]) : vals[f.id]; });
     const r = addRequest({ kind, title, fields: data });
     setSent(r.id);
     showToast(tr(['Ariza yuborildi', 'Заявка отправлена', 'Request sent']));

@@ -11,6 +11,7 @@ import Cart from './pages/Cart';
 import { Account, Compare, Favorites, Orders, Points, Requests } from './pages/Account';
 import { Delivery, Promos } from './pages/Promos';
 import { ServicePage, Services } from './pages/Services';
+import { About, B2B, Club, Feedback, Payment, PromoPage, Returns, Stores } from './pages/Info';
 import NotFound from './pages/NotFound';
 
 function ScrollTop() {
@@ -42,6 +43,14 @@ export default function App() {
               <Route path="/account/points" element={<Points />} />
               <Route path="/account/requests" element={<Requests />} />
               <Route path="/promos" element={<Promos />} />
+              <Route path="/promos/:id" element={<PromoPage />} />
+              <Route path="/stores" element={<Stores />} />
+              <Route path="/club" element={<Club />} />
+              <Route path="/b2b" element={<B2B />} />
+              <Route path="/returns" element={<Returns />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/feedback" element={<Feedback />} />
               <Route path="/services" element={<Services />} />
               <Route path="/services/:id" element={<ServicePage />} />
               <Route path="/delivery" element={<Delivery />} />

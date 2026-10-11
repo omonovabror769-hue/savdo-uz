@@ -64,7 +64,7 @@ export function FeedbackBar() {
   const { t } = useI18n();
   return (
     <div className="feedback-bar">
-      <IconChat size={18} /> <Link to="/services">{t('feedback')}</Link>
+      <IconChat size={18} /> <Link to="/feedback">{t('feedback')}</Link>
     </div>
   );
 }
@@ -172,34 +172,37 @@ export function Footer() {
           {col(t('catalog'), categories.map((c) => ({ to: `/catalog/${c.id}`, l: tr(c.n) })))}
           {col(tr(['Xaridorlarga', 'Покупателям', 'For customers']), [
             { to: '/delivery', l: t('delivery') },
-            { to: '/delivery', l: t('pickup') },
-            { to: '/cart', l: t('payMethod') },
-            { to: '/services', l: t('b2b') },
-            { to: '/services', l: tr(['Tovarni qaytarish', 'Возврат товара', 'Returns']) },
+            { to: '/stores', l: t('pickup') },
+            { to: '/payment', l: t('payMethod') },
+            { to: '/b2b', l: t('b2b') },
+            { to: '/returns', l: tr(['Tovarni qaytarish', 'Возврат товара', 'Returns']) },
             { to: '/promos', l: t('promos') },
+            { to: '/about', l: tr(['Kompaniya haqida', 'О компании', 'About us']) },
           ])}
           {col(t('services'), [
-            { to: '/services', l: tr(['Asbob ijarasi', 'Аренда инструмента', 'Tool rental']) },
-            { to: '/services', l: tr(["Bo'yoqlarni kolerlash", 'Колеровка красок', 'Paint tinting']) },
-            { to: '/services', l: tr(['Arralash', 'Распил', 'Cutting']) },
-            { to: '/services', l: tr(["Ta'mir kalkulyatori", 'Калькулятор ремонта', 'Renovation calculator']) },
-            { to: '/services', l: tr(['Elektr montaj ishlari', 'Электромонтажные работы', 'Electrical works']) },
+            { to: '/services/rent', l: tr(['Asbob ijarasi', 'Аренда инструмента', 'Tool rental']) },
+            { to: '/services/tint', l: tr(["Bo'yoqlarni kolerlash", 'Колеровка красок', 'Paint tinting']) },
+            { to: '/services/cut', l: tr(['Arralash', 'Распил', 'Cutting']) },
+            { to: '/services/calc', l: tr(["Ta'mir kalkulyatori", 'Калькулятор ремонта', 'Renovation calculator']) },
+            { to: '/services/build-calc', l: tr(['Qurilish kalkulyatori', 'Строительный калькулятор', 'Building calculator']) },
+            { to: '/services/electro', l: tr(['Elektr montaj ishlari', 'Электромонтажные работы', 'Electrical works']) },
           ])}
           {col(tr(['Sodiqlik', 'Лояльность', 'Loyalty']), [
-            { to: '/promos', l: t('club') },
-            { to: '/account', l: t('points') },
+            { to: '/club', l: t('club') },
+            { to: '/account/points', l: t('points') },
             { to: '/sale', l: t('cashback') },
           ])}
           <div className="fcol">
             <h4>{tr(['Aloqa', 'Контакты', 'Contacts'])}</h4>
             <ul>
-              <li className="fphone">+998 (71) 200-00-00</li>
+              <li className="fphone"><a href="tel:+998712000000">+998 (71) 200-00-00</a></li>
               <li>info@savdo.uz</li>
-              <li>{tr(['Toshkent, Chilonzor tumani', 'Ташкент, Чиланзарский район', 'Tashkent, Chilanzar district'])}</li>
+              <li><Link to="/stores">{tr(["Barcha do'konlar manzillari", 'Адреса всех магазинов', 'All store addresses'])}</Link></li>
             </ul>
             <h4 className="mt">{t('fbTitle')}</h4>
-            <ul className="socials">
-              <li>Telegram</li><li>Instagram</li><li>YouTube</li><li>Facebook</li>
+            <ul>
+              <li><Link to="/feedback">{tr(['Xabar yozish', 'Написать сообщение', 'Send a message'])}</Link></li>
+              <li><Link to="/services/pro">{tr(['Usta chaqirish', 'Вызвать мастера', 'Book a contractor'])}</Link></li>
             </ul>
           </div>
         </div>

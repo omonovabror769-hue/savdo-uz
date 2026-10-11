@@ -8,7 +8,7 @@ export function PromoCard({ p }: { p: Promo }) {
   const { tr, lang } = useI18n();
   const ad = lang === 'uz' ? 'Reklama' : lang === 'ru' ? 'Реклама' : 'Ad';
   return (
-    <Link to={p.link || '/promos'} className="promo">
+    <Link to={`/promos/${p.id}`} className="promo">
       <div className="promo-art" style={{ background: p.bg, color: p.fg }}>
         {p.ad && <span className="promo-ad">{ad}</span>}
         <b className="promo-big">{typeof p.big === 'string' ? p.big : tr(p.big)}</b>

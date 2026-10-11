@@ -56,7 +56,7 @@ export default function Home() {
           </div>
         </Link>
         <div className="hero-side">
-          <Link to="/promos" className="hero-mini" style={{ background: '#14171c', color: '#ffd400' }}>
+          <Link to={`/promos/${promos[0].id}`} className="hero-mini" style={{ background: '#14171c', color: '#ffd400' }}>
             <b>{tr(promos[0].title)}</b>
             <span>{tr(promos[0].dates)}</span>
           </Link>
