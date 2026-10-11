@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { HashRouter, MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 // Claude ichidagi ko'rib chiqish oynasida manzil satri o'zgarmasligi kerak — u yerda MemoryRouter ishlatiladi.
@@ -17,6 +17,12 @@ import { Delivery, Promos } from './pages/Promos';
 import { ServicePage, Services } from './pages/Services';
 import { About, B2B, Club, Feedback, Payment, PromoPage, Returns, Stores } from './pages/Info';
 import NotFound from './pages/NotFound';
+import ErrorBoundary from './components/ErrorBoundary';
+
+function SafeMain({ children }: { children: ReactNode }) {
+  const { pathname, search } = useLocation();
+  return <ErrorBoundary resetKey={pathname + search}>{children}</ErrorBoundary>;
+}
 
 function ScrollTop() {
   const { pathname, search } = useLocation();
@@ -26,12 +32,14 @@ function ScrollTop() {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <I18nProvider>
       <StoreProvider>
         <Router>
           <ScrollTop />
           <Header />
           <main>
+            <SafeMain>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/catalog/:catId" element={<CategoryPage />} />
@@ -60,6 +68,7 @@ export default function App() {
               <Route path="/delivery" element={<Delivery />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </SafeMain>
           </main>
           <FeedbackBar />
           <Footer />
@@ -69,5 +78,6 @@ export default function App() {
         </Router>
       </StoreProvider>
     </I18nProvider>
+    </ErrorBoundary>
   );
 }

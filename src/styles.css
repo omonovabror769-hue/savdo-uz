@@ -704,3 +704,7 @@ h1, h2, h3 { text-wrap: balance; }
 .prow { content-visibility: auto; contain-intrinsic-size: auto 210px; }
 .pcard { content-visibility: auto; contain-intrinsic-size: auto 400px; }
 .seo, .footer, .about { content-visibility: auto; contain-intrinsic-size: auto 420px; }
+.crash { max-width: 640px; margin: 60px auto; padding: 28px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.crash h2 { margin: 0; }
+.crash p { margin: 0; color: var(--muted); }
+.crash pre { white-space: pre-wrap; text-align: left; background: var(--soft); padding: 12px 14px; border-radius: 8px; font-size: 12px; max-width: 100%; overflow: auto; color: var(--red); }
