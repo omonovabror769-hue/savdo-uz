@@ -1,5 +1,7 @@
 # savdo.uz — qurilish va uy tovarlari marketpleysi
 
+**Sayt:** https://omonovabror769-hue.github.io/savdo-uz/
+
 React + TypeScript + Vite asosidagi internet-do'kon. 3 tilda (O'zbekcha / Русский / English), kirish faqat Google orqali.
 
 ## Imkoniyatlar
