@@ -1,1 +1,14 @@
-{ "v": 1 }
+{
+  "v": 1,
+  "texts": {},
+  "products": {},
+  "newProducts": [],
+  "cats": {},
+  "promos": {},
+  "services": {},
+  "slides": {},
+  "logo": {},
+  "theme": {
+    "brand": "#0ea5e9"
+  }
+}
