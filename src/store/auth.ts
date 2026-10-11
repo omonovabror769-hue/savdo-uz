@@ -18,10 +18,17 @@ declare global {
   }
 }
 
-export const GOOGLE_CLIENT_ID: string =
-  (import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined) || window.SAVDO_CONFIG?.googleClientId || '';
+import { GOOGLE_CLIENT_ID as CONFIG_ID } from '../config';
 
-export const isDemo = !GOOGLE_CLIENT_ID;
+// Ustuvorlik: build paytidagi VITE_GOOGLE_CLIENT_ID → src/config.ts → window.SAVDO_CONFIG
+export const GOOGLE_CLIENT_ID: string =
+  (import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined) || CONFIG_ID || window.SAVDO_CONFIG?.googleClientId || '';
+
+// Claude ichidagi ko'rib chiqish oynasida Google kirish ishlamaydi (manzil Google'da ro'yxatdan o'tmagan),
+// shuning uchun u yerda doim demo rejim.
+const PREVIEW = import.meta.env.VITE_ROUTER === 'memory';
+
+export const isDemo = PREVIEW || !GOOGLE_CLIENT_ID;
 
 let loading: Promise<void> | null = null;
 export function loadGis(): Promise<void> {
@@ -51,11 +58,13 @@ function decodeJwt(token: string): any {
 }
 
 let initialized = false;
+let onUserCb: ((u: User) => void) | null = null;
 /**
  * Google kirishni ishga tushiradi. auto_select: true — ilgari kirgan foydalanuvchi
  * keyingi safar hech narsa bosmasdan avtomatik kiradi (One Tap).
  */
-export async function initGoogle(onUser: (u: User) => void, opts: { prompt: boolean }) {
+export async function initGoogle(onUser: ((u: User) => void) | null, opts: { prompt: boolean }) {
+  if (onUser) onUserCb = onUser;
   if (isDemo) return;
   await loadGis();
   if (!initialized) {
@@ -67,7 +76,7 @@ export async function initGoogle(onUser: (u: User) => void, opts: { prompt: bool
       use_fedcm_for_prompt: true,
       callback: (resp: { credential: string }) => {
         const p = decodeJwt(resp.credential);
-        onUser({ id: p.sub, name: p.name, email: p.email, picture: p.picture });
+        onUserCb?.({ id: p.sub, name: p.name, email: p.email, picture: p.picture });
       },
     });
     initialized = true;

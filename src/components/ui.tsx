@@ -104,7 +104,7 @@ export function LoginModal() {
 
   useEffect(() => {
     if (!loginOpen || isDemo) return;
-    initGoogle(() => {}, { prompt: false })
+    initGoogle(null, { prompt: false })
       .then(() => btnRef.current && renderGoogleButton(btnRef.current, lang))
       .catch(() => {});
   }, [loginOpen, lang]);

@@ -86,6 +86,10 @@ function usePersist<T>(key: string, init: T) {
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = usePersist<User | null>('user', null);
+  // Haqiqiy Google kirish yoqilgan bo'lsa, ilgari saqlangan demo akkaunt bekor qilinadi
+  useEffect(() => {
+    if (!isDemo && user?.demo) setUser(null);
+  }, [user, setUser]);
   const [loginOpen, setLoginOpen] = useState(false);
   const [cart, setCart] = usePersist<CartLine[]>('cart', []);
   const [favs, setFavs] = usePersist<string[]>('favs', []);
