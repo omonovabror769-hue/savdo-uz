@@ -7,6 +7,7 @@ import { Crumbs, SeoBlock, Thumb } from '../components/ui';
 import Listing from '../components/Listing';
 import { ProductCard } from '../components/Product';
 import NotFound from './NotFound';
+import { useAdmin } from '../admin/AdminProvider';
 
 export function CategoryPage() {
   const { catId = '' } = useParams();
@@ -19,7 +20,7 @@ export function CategoryPage() {
   if (!cat) return <NotFound />;
   return (
     <div className="container page">
-      <h1 className="page-title">{tr(cat.n)}</h1>
+      <h1 className="page-title" data-edit={`cat:${cat.id}`}>{tr(cat.n)}</h1>
       <div className="with-side">
         <aside className="side-nav">
           {cat.subs.map((s) => (
@@ -30,8 +31,8 @@ export function CategoryPage() {
           <Crumbs items={[{ label: tr(cat.n) }]} />
           <div className="tiles">
             {cat.subs.map((s) => (
-              <Link key={s.id} to={`/catalog/${cat.id}/${s.id}`} className="tile">
-                <Thumb emoji={s.e} catId={cat.id} size="md" />
+              <Link key={s.id} to={`/catalog/${cat.id}/${s.id}`} className="tile" data-edit={`cat:${s.id}`}>
+                <Thumb emoji={s.e} catId={cat.id} size="md" img={s.img} />
                 <span>{tr(s.n)}</span>
                 <small className="muted">{countOfSub(s.id)} {t('goods')}</small>
               </Link>
@@ -47,6 +48,7 @@ export function CategoryPage() {
 }
 
 export function SubPage() {
+  const { isAdmin, open } = useAdmin();
   const { catId = '', subId = '' } = useParams();
   const [sp] = useSearchParams();
   const { tr } = useI18n();
@@ -71,7 +73,10 @@ export function SubPage() {
   return (
     <div className="container page">
       <Crumbs items={[{ to: `/catalog/${cat.id}`, label: tr(cat.n) }, { label: tr(sub.n) }]} />
-      <h1 className="page-title">{tr(sub.n)}</h1>
+      <h1 className="page-title" data-edit={`cat:${sub.id}`}>{tr(sub.n)}</h1>
+      {isAdmin && (
+        <button className="btn btn-brand admin-add" data-admin-ui onClick={() => open({ type: 'new', subId: sub.id })}>+ Shu bo'limga tovar qo'shish</button>
+      )}
       <div className="chips-row">
         <Link to={`/catalog/${cat.id}/${sub.id}`} className={'chip' + (g == null ? ' on' : '')}>
           {tr(['Hammasi', 'Все', 'All'])}
@@ -85,7 +90,7 @@ export function SubPage() {
       <div className="sub-icons">
         {cat.subs.map((s) => (
           <NavLink key={s.id} to={`/catalog/${cat.id}/${s.id}`} className="sub-icon">
-            <Thumb emoji={s.e} catId={cat.id} size="sm" />
+            <Thumb emoji={s.e} catId={cat.id} size="sm" img={s.img} />
             <span>{tr(s.n)}</span>
           </NavLink>
         ))}
@@ -113,7 +118,7 @@ export function SearchPage() {
   const [sp] = useSearchParams();
   const q = sp.get('q') || '';
   const { t, tr } = useI18n();
-  const items = useMemo(() => (q ? searchProducts(q) : products.filter((p) => p.isNew)), [q]);
+  const items = useMemo(() => (q ? searchProducts(q) : products.filter((p) => !p.hidden && p.isNew)), [q]);
   return (
     <div className="container page">
       <Crumbs items={[{ label: t('searchResults') }]} />
@@ -134,7 +139,7 @@ export function SearchPage() {
 
 export function SalePage() {
   const { t } = useI18n();
-  const items = useMemo(() => products.filter((p) => p.oldPrice || p.hit), []);
+  const items = useMemo(() => products.filter((p) => !p.hidden && (p.oldPrice || p.hit)), []);
   return (
     <div className="container page">
       <Crumbs items={[{ label: t('bestDeals') }]} />

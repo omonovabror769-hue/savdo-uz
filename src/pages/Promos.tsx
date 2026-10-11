@@ -10,8 +10,9 @@ export function PromoCard({ p }: { p: Promo }) {
   const { tr, lang } = useI18n();
   const ad = lang === 'uz' ? 'Reklama' : lang === 'ru' ? 'Реклама' : 'Ad';
   return (
-    <Link to={`/promos/${p.id}`} className="promo">
-      <div className="promo-art" style={{ background: p.bg, color: p.fg }}>
+    <Link to={`/promos/${p.id}`} className="promo" data-edit={`promo:${p.id}`}>
+      <div className={'promo-art' + (p.img ? ' has-img' : '')} style={{ background: p.bg, color: p.fg }}>
+        {p.img && <img src={p.img} alt="" className="promo-img" loading="lazy" />}
         {p.ad && <span className="promo-ad">{ad}</span>}
         <b className="promo-big">{typeof p.big === 'string' ? p.big : tr(p.big)}</b>
         <span className="promo-emoji" aria-hidden="true">{p.emoji}</span>

@@ -6,7 +6,7 @@ import { services } from '../data/content';
 import { serviceInfo } from '../data/serviceInfo';
 import { productById, productsOfCat } from '../data/catalog';
 import type { L3 } from '../data/types';
-import { Crumbs, Thumb } from '../components/ui';
+import { Crumbs, Pic, Thumb } from '../components/ui';
 import { fullName } from '../components/Product';
 import RequestForm, { addressField, commentField, dateField, nameField, phoneField } from '../components/RequestForm';
 import NotFound from './NotFound';
@@ -27,8 +27,8 @@ export function Services() {
             {services.map((s) => {
               const info = serviceInfo[s.id];
               return (
-                <Link key={s.id} to={`/services/${s.id}`} className="svc">
-                  <span className="svc-ic">{s.e}</span>
+                <Link key={s.id} to={`/services/${s.id}`} className="svc" data-edit={`service:${s.id}`}>
+                  <span className="svc-ic"><Pic img={s.img} e={s.e} /></span>
                   <span>{tr(s.n)}</span>
                   {info?.price ? <small className="muted">{t('from')} {money(info.price)}</small> : info?.kind?.startsWith('calc') ? <small className="muted">{tr(['Onlayn', 'Онлайн', 'Online'])}</small> : null}
                 </Link>
@@ -65,7 +65,7 @@ export function ServicePage() {
         <div className="minw0">
           <Crumbs items={[{ to: '/services', label: t('servicesTitle') }, { label: tr(s.n) }]} />
           <div className="svc-head">
-            <span className="svc-ic lg">{s.e}</span>
+            <span className="svc-ic lg" data-edit={`service:${s.id}`}><Pic img={s.img} e={s.e} /></span>
             <div>
               <h1 className="page-title sm">{tr(s.n)}</h1>
               <p className="lead">{tr(info.d)}</p>
@@ -125,7 +125,7 @@ function Materials({ lines }: { lines: Line[] }) {
                 <tr key={l.id}>
                   <td>
                     <div className="tbl-prod">
-                      <Thumb emoji={p.emoji} catId={p.catId} size="sm" />
+                      <Thumb emoji={p.emoji} catId={p.catId} size="sm" img={p.img} />
                       <div>
                         <Link to={`/product/${p.id}`}>{fullName(p, tr)}</Link>
                         {l.note && <small className="muted">{l.note}</small>}

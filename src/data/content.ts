@@ -12,6 +12,7 @@ export interface Promo {
   dates: L3;
   ad?: boolean;
   link?: string;
+  img?: string;
 }
 
 export const promoTags: { id: Promo['tag'] | 'all'; n: L3 }[] = [
@@ -76,7 +77,7 @@ export const promos: Promo[] = [
     dates: ['1-dekabrgacha', 'до 1 декабря', 'Until Dec 1'], link: '/catalog/electric' },
 ];
 
-export interface Service { id: string; e: string; n: L3 }
+export interface Service { id: string; e: string; n: L3; img?: string }
 export const services: Service[] = [
   { id: 'delivery', e: '🚚', n: ["Yetkazib berish va ko'tarish", 'Доставка и подъем', 'Delivery and lifting'] },
   { id: 'return', e: '📦', n: ['Qaytarish', 'Возврат', 'Returns'] },
@@ -139,4 +140,22 @@ export const districts: { n: L3; km: number }[] = [
   { n: ['Bektemir', 'Бектемир', 'Bektemir'], km: 20 },
   { n: ['Yangihayot', 'Янгихаёт', 'Yangikhayot'], km: 16 },
   { n: ['Toshkent viloyati', 'Ташкентская область', 'Tashkent region'], km: 35 },
+];
+
+export const heroSlides: { bg: string; fg: string; emoji: string; to: string; t: L3; s: L3 }[] = [
+  {
+    bg: 'linear-gradient(110deg,#e31e24 0%,#e31e24 55%,#b3121a 100%)', fg: '#ffffff', emoji: '🧱🪣🛠️', to: '/catalog/stroy',
+    t: ["Kuzgi ta'mir mavsumi: qurilish materiallariga −20% gacha", 'Осенний сезон ремонта: до −20% на стройматериалы', 'Autumn renovation season: up to −20% on building materials'],
+    s: ["Sement, g'isht, gipsokarton va aralashmalar — Toshkent bo'ylab 2 soatda yetkazamiz", 'Цемент, кирпич, гипсокартон и смеси — доставим по Ташкенту за 2 часа', 'Cement, bricks, drywall and mixes delivered across Tashkent in 2 hours'],
+  },
+  {
+    bg: 'linear-gradient(110deg,#17191d 0%,#2c3038 100%)', fg: '#ffffff', emoji: '🔌💡⚡', to: '/catalog/electric',
+    t: ['Elektrika: kabel va avtomatlarga foydali narxlar', 'Электрика: выгодные цены на кабель и автоматы', 'Electrical: great prices on cable and breakers'],
+    s: ["Legrand, Schneider Electric, IEK — rasmiy kafolat bilan", 'Legrand, Schneider Electric, IEK — с официальной гарантией', 'Legrand, Schneider Electric, IEK with official warranty'],
+  },
+  {
+    bg: 'linear-gradient(110deg,#0f5132 0%,#198754 100%)', fg: '#ffffff', emoji: '🌿🔥🍖', to: '/catalog/garden',
+    t: ["Bog' va dam olish: mangal, qozon va bog' texnikasi", 'Сад и досуг: мангалы, казаны и садовая техника', 'Garden & leisure: grills, kazans and garden machinery'],
+    s: ["Dala hovli uchun hamma narsa bir joyda", 'Всё для дачи в одном месте', 'Everything for your country house in one place'],
+  },
 ];

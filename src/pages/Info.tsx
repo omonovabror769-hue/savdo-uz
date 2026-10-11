@@ -6,7 +6,7 @@ import { products } from '../data/catalog';
 import { cities, promos } from '../data/content';
 import { stores, storeFeatures } from '../data/stores';
 import type { L3 } from '../data/types';
-import { Crumbs } from '../components/ui';
+import { Crumbs, Pic } from '../components/ui';
 import { ProductCard } from '../components/Product';
 import RequestForm, { commentField, nameField, phoneField } from '../components/RequestForm';
 import { GoogleG, IconCheck, IconPin } from '../components/Icons';
@@ -50,10 +50,10 @@ export function PromoPage() {
   const p = promos.find((x) => x.id === id);
   const items = useMemo(() => {
     if (!p) return [];
-    if (p.tag === 'electric') return products.filter((x) => x.catId === 'electric' && (x.oldPrice || x.hit)).slice(0, 10);
-    if (p.tag === 'new') return products.filter((x) => x.catId === 'finish').slice(0, 10);
-    if (p.tag === 'deal' || p.tag === 'sale' || p.tag === 'club') return products.filter((x) => x.oldPrice).slice(0, 10);
-    return products.filter((x) => x.hit).slice(0, 10);
+    if (p.tag === 'electric') return products.filter((x) => !x.hidden && x.catId === 'electric' && (x.oldPrice || x.hit)).slice(0, 10);
+    if (p.tag === 'new') return products.filter((x) => !x.hidden && x.catId === 'finish').slice(0, 10);
+    if (p.tag === 'deal' || p.tag === 'sale' || p.tag === 'club') return products.filter((x) => !x.hidden && x.oldPrice).slice(0, 10);
+    return products.filter((x) => !x.hidden && x.hit).slice(0, 10);
   }, [p]);
   if (!p) return <NotFound />;
   const rules: L3[] = [
@@ -66,13 +66,13 @@ export function PromoPage() {
   return (
     <div className="container page">
       <Crumbs items={[{ to: '/promos', label: t('promosTitle') }, { label: tr(p.title) }]} />
-      <div className="promo-hero" style={{ background: p.bg, color: p.fg }}>
+      <div className="promo-hero" style={{ background: p.bg, color: p.fg }} data-edit={`promo:${p.id}`}>
         <div>
           <span className="promo-hero-dates">{tr(p.dates)}</span>
           <h1>{tr(p.title)}</h1>
           <p>{tr(p.text)}</p>
         </div>
-        <span className="promo-hero-art" aria-hidden="true">{p.emoji}</span>
+        <span className="promo-hero-art" aria-hidden="true"><Pic img={p.img} e={p.emoji} /></span>
       </div>
       <div className="promo-body">
         <section>

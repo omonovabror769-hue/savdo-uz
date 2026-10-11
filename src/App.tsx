@@ -20,6 +20,9 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Gate from './components/Gate';
 import { StoreProvider, useStore } from './store';
 import { gateOn, isAllowed } from './store/auth';
+import { AdminProvider, useAdmin } from './admin/AdminProvider';
+import AdminPage from './admin/AdminPage';
+import type { Content } from './admin/content';
 
 function SafeMain({ children }: { children: ReactNode }) {
   const { pathname, search } = useLocation();
@@ -34,6 +37,12 @@ function Guard({ children }: { children: ReactNode }) {
   return <Gate denied={!!user} />;
 }
 
+/** Admin o'zgarishi saqlanganda sahifani yangi ma'lumot bilan qayta chizish */
+function Remount({ children }: { children: ReactNode }) {
+  const { version } = useAdmin();
+  return <div key={version} className="remount">{children}</div>;
+}
+
 function ScrollTop() {
   const { pathname, search } = useLocation();
   useEffect(() => {
@@ -43,13 +52,15 @@ function ScrollTop() {
   return null;
 }
 
-export default function App() {
+export default function App({ content }: { content: Content }) {
   return (
     <ErrorBoundary>
     <I18nProvider>
       <StoreProvider>
         <Router>
+        <AdminProvider initial={content}>
         <Guard>
+          <Remount>
           <ScrollTop />
           <Header />
           <main>
@@ -80,6 +91,7 @@ export default function App() {
               <Route path="/services" element={<Services />} />
               <Route path="/services/:id" element={<ServicePage />} />
               <Route path="/delivery" element={<Delivery />} />
+              <Route path="/admin" element={<AdminPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             </SafeMain>
@@ -88,8 +100,10 @@ export default function App() {
           <Footer />
           <LoginModal />
           <LangModal />
+          </Remount>
           <Toast />
         </Guard>
+        </AdminProvider>
         </Router>
       </StoreProvider>
     </I18nProvider>

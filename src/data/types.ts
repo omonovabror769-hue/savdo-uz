@@ -27,6 +27,7 @@ export interface SubCat {
   e: string;
   n: L3;
   items: ItemTpl[];
+  img?: string;
 }
 
 export interface Category {
@@ -34,6 +35,7 @@ export interface Category {
   e: string;
   n: L3;
   subs: SubCat[];
+  img?: string;
 }
 
 export interface Product {
@@ -55,4 +57,5 @@ export interface Product {
   isNew?: boolean;
   hit?: boolean;
   country: L3;
+  hidden?: boolean;
 }

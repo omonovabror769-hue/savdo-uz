@@ -36,7 +36,7 @@ export default function ProductPage() {
   return (
     <div className="container page">
       <Crumbs items={[{ to: `/catalog/${cat.id}`, label: tr(cat.n) }, { to: `/catalog/${cat.id}/${sub.id}`, label: tr(sub.n) }, { label: tr(p.n) }]} />
-      <h1 className="pp-title">{fullName(p, tr)}</h1>
+      <h1 className="pp-title" data-edit={`product:${p.id}`}>{fullName(p, tr)}</h1>
       <div className="pp-meta">
         <PRating id={p.id} />
         <span className="muted">{t('sku')}: {p.sku}</span>
@@ -47,7 +47,7 @@ export default function ProductPage() {
           <IconCompare size={16} /> {t('compare')}
         </button>
       </div>
-      <div className="pp">
+      <div className="pp" data-edit={`product:${p.id}`}>
         <div className="pp-gallery">
           <Badges p={p} />
           <Thumb emoji={p.emoji} catId={p.catId} size="xl" img={p.img} />

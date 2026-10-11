@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { L3, UnitKey } from '../data/types';
 import { storage } from '../store/storage';
+import { seenTexts, textOverrides } from '../admin/content';
 
 export type Lang = 'uz' | 'ru' | 'en';
 export const LANGS: { id: Lang; label: string; short: string; flag: string }[] = [
@@ -175,6 +176,7 @@ const dict = {
 } satisfies Record<string, L3>;
 
 export type DictKey = keyof typeof dict;
+export const allDict = dict as Record<string, L3>;
 
 const units: Record<UnitKey, L3> = {
   pc: ['dona', 'шт', 'pc'],
@@ -228,10 +230,18 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     lang,
     setLang,
     chosen,
-    t: (k) => dict[k][i],
-    tr: (v) => v[i],
+    t: (k) => {
+      const key = 't.' + k;
+      seenTexts.set(key, dict[k]);
+      return (textOverrides.get(key) || dict[k])[i];
+    },
+    tr: (v) => {
+      if (!v) return '';
+      seenTexts.set(v[0], v);
+      return (textOverrides.get(v[0]) || v)[i] ?? v[i];
+    },
     unit: (u) => units[u][i],
-    money: (n: number) => `${nf.format(n).replace(/[\u00a0\u202f]/g, ' ')} ${dict.sum[i]}`,
+    money: (n: number) => `${nf.format(n).replace(/[\u00a0\u202f]/g, ' ')} ${(textOverrides.get('t.sum') || dict.sum)[i]}`,
     };
     // setLang barqaror emas, lekin u faqat holatni o'zgartiradi
     // eslint-disable-next-line react-hooks/exhaustive-deps

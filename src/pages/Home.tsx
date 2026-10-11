@@ -2,28 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import { categories, products } from '../data/catalog';
-import { promos, services } from '../data/content';
+import { heroSlides as slides, promos, services } from '../data/content';
 import { ProductCard } from '../components/Product';
 import { IconChevron } from '../components/Icons';
 import { PromoCard } from './Promos';
+import { Pic } from '../components/ui';
+import { slideOverrides } from '../admin/content';
 
-const slides = [
-  {
-    bg: 'linear-gradient(110deg,#e31e24 0%,#e31e24 55%,#b3121a 100%)', fg: '#ffffff', emoji: '🧱🪣🛠️', to: '/catalog/stroy',
-    t: ["Kuzgi ta'mir mavsumi: qurilish materiallariga −20% gacha", 'Осенний сезон ремонта: до −20% на стройматериалы', 'Autumn renovation season: up to −20% on building materials'],
-    s: ["Sement, g'isht, gipsokarton va aralashmalar — Toshkent bo'ylab 2 soatda yetkazamiz", 'Цемент, кирпич, гипсокартон и смеси — доставим по Ташкенту за 2 часа', 'Cement, bricks, drywall and mixes delivered across Tashkent in 2 hours'],
-  },
-  {
-    bg: 'linear-gradient(110deg,#17191d 0%,#2c3038 100%)', fg: '#ffffff', emoji: '🔌💡⚡', to: '/catalog/electric',
-    t: ['Elektrika: kabel va avtomatlarga foydali narxlar', 'Электрика: выгодные цены на кабель и автоматы', 'Electrical: great prices on cable and breakers'],
-    s: ["Legrand, Schneider Electric, IEK — rasmiy kafolat bilan", 'Legrand, Schneider Electric, IEK — с официальной гарантией', 'Legrand, Schneider Electric, IEK with official warranty'],
-  },
-  {
-    bg: 'linear-gradient(110deg,#0f5132 0%,#198754 100%)', fg: '#ffffff', emoji: '🌿🔥🍖', to: '/catalog/garden',
-    t: ["Bog' va dam olish: mangal, qozon va bog' texnikasi", 'Сад и досуг: мангалы, казаны и садовая техника', 'Garden & leisure: grills, kazans and garden machinery'],
-    s: ["Dala hovli uchun hamma narsa bir joyda", 'Всё для дачи в одном месте', 'Everything for your country house in one place'],
-  },
-];
+
 
 export default function Home() {
   const { t, tr } = useI18n();
@@ -34,21 +20,23 @@ export default function Home() {
     const id = window.setInterval(() => setSlide((s) => (s + 1) % slides.length), 6000);
     return () => window.clearInterval(id);
   }, []);
-  const hits = useMemo(() => products.filter((p) => p.hit && p.stock > 0).slice(0, 10), []);
-  const deals = useMemo(() => products.filter((p) => p.oldPrice).sort((a, b) => b.oldPrice! / b.price - a.oldPrice! / a.price).slice(0, 10), []);
-  const news = useMemo(() => products.filter((p) => p.isNew).slice(0, 10), []);
-  const sl = slides[slide];
+  const hits = useMemo(() => products.filter((p) => !p.hidden && p.hit && p.stock > 0).slice(0, 10), []);
+  const deals = useMemo(() => products.filter((p) => !p.hidden && p.oldPrice).sort((a, b) => b.oldPrice! / b.price - a.oldPrice! / a.price).slice(0, 10), []);
+  const news = useMemo(() => products.filter((p) => !p.hidden && p.isNew).slice(0, 10), []);
+  const base = slides[slide];
+  const ov = slideOverrides[String(slide)] || {};
+  const sl = { ...base, t: ov.t || base.t, s: ov.s || base.s, img: ov.img };
 
   return (
     <div className="container page">
       <section className="hero">
-        <Link to={sl.to} className="hero-main" style={{ background: sl.bg, color: sl.fg }}>
+        <Link to={sl.to} className="hero-main" style={{ background: sl.bg, color: sl.fg }} data-edit={`slide:${slide}`}>
           <div className="hero-text">
             <h1>{tr(sl.t as [string, string, string])}</h1>
             <p>{tr(sl.s as [string, string, string])}</p>
             <span className="btn btn-dark">{t('goCatalog')} <IconChevron size={16} /></span>
           </div>
-          <div className="hero-art" aria-hidden="true">{sl.emoji}</div>
+          <div className="hero-art" aria-hidden="true"><Pic img={sl.img} e={sl.emoji} /></div>
           <div className="hero-dots" onClick={(e) => e.preventDefault()}>
             {slides.map((_, i) => (
               <button key={i} className={i === slide ? 'on' : ''} onClick={() => setSlide(i)} aria-label={`${i + 1}`} />
@@ -69,8 +57,8 @@ export default function Home() {
 
       <section className="home-cats">
         {categories.map((c) => (
-          <Link key={c.id} to={`/catalog/${c.id}`} className="home-cat">
-            <span className="home-cat-ic">{c.e}</span>
+          <Link key={c.id} to={`/catalog/${c.id}`} className="home-cat" data-edit={`cat:${c.id}`}>
+            <span className="home-cat-ic"><Pic img={c.img} e={c.e} /></span>
             <span>{tr(c.n)}</span>
           </Link>
         ))}

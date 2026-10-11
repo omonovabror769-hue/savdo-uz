@@ -3,7 +3,8 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LANGS, useI18n } from '../i18n';
 import { useStore } from '../store';
 import { categories, countOfSub, searchProducts } from '../data/catalog';
-import { Thumb } from './ui';
+import { Pic, Thumb } from './ui';
+import { logo } from '../admin/content';
 import { cities } from '../data/content';
 import {
   IconCart, IconChevronDown, IconClose, IconCompare, IconHeart, IconMenu, IconPin, IconSearch, IconServices, IconUser, IconBox,
@@ -11,9 +12,15 @@ import {
 
 export function Logo() {
   return (
-    <Link to="/" className="logo" aria-label="savdo.uz">
-      <span className="logo-word">SAVDO</span>
-      <span className="logo-dot">.uz</span>
+    <Link to="/" className="logo" aria-label="savdo.uz" data-edit="logo">
+      {logo.img ? (
+        <img src={logo.img} alt="savdo.uz" className="logo-img" />
+      ) : (
+        <>
+          <span className="logo-word">{logo.word || 'SAVDO'}</span>
+          <span className="logo-dot">{logo.suffix ?? '.uz'}</span>
+        </>
+      )}
     </Link>
   );
 }
@@ -72,7 +79,7 @@ function MegaMenu({ onClose }: { onClose: () => void }) {
                 onFocus={() => setActive(c.id)}
                 onClick={onClose}
               >
-                <span className="mega-ic">{c.e}</span>
+                <span className="mega-ic"><Pic img={c.img} e={c.e} /></span>
                 {tr(c.n)}
               </Link>
             </li>
@@ -87,7 +94,7 @@ function MegaMenu({ onClose }: { onClose: () => void }) {
           <div className="mega-cols">
             {cat.subs.map((s) => (
               <div key={s.id} className="mega-col">
-                <Link to={`/catalog/${cat.id}/${s.id}`} onClick={onClose} className="mega-sub-title">{tr(s.n)}</Link>
+                <Link to={`/catalog/${cat.id}/${s.id}`} onClick={onClose} className="mega-sub-title" data-edit={`cat:${s.id}`}>{tr(s.n)}</Link>
                 <ul>
                   {s.items.map((it, i) => (
                     <li key={i}>
@@ -254,7 +261,7 @@ export default function Header() {
         <nav className={'catnav' + (mobileNav ? ' open' : '')}>
           <div className="container catnav-row">
             {categories.map((c) => (
-              <NavLink key={c.id} to={`/catalog/${c.id}`}>
+              <NavLink key={c.id} to={`/catalog/${c.id}`} data-edit={`cat:${c.id}`}>
                 <span className="only-mobile">{c.e} </span>{tr(c.n)}
               </NavLink>
             ))}

@@ -123,7 +123,7 @@ export function ProductRow({ p }: { p: Product }) {
   const s = subById.get(p.subId)!;
   const cat = catById.get(p.catId)!;
   return (
-    <article className="prow">
+    <article className="prow" data-edit={`product:${p.id}`}>
       <Link to={`/product/${p.id}`} className="prow-img">
         <Badges p={p} />
         <Thumb emoji={p.emoji} catId={p.catId} size="lg" img={p.img} />
@@ -155,7 +155,7 @@ export function ProductRow({ p }: { p: Product }) {
 export function ProductCard({ p }: { p: Product }) {
   const { tr } = useI18n();
   return (
-    <article className="pcard">
+    <article className="pcard" data-edit={`product:${p.id}`}>
       <Link to={`/product/${p.id}`} className="pcard-img">
         <Badges p={p} />
         <Thumb emoji={p.emoji} catId={p.catId} size="lg" img={p.img} />

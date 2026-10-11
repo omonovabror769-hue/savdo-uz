@@ -57,6 +57,17 @@ export const ALLOWED_EMAILS = ['omonovabror769@gmail.com', 'yana.biri@gmail.com'
 Yopiq rejim faqat Google Client ID ulanganda ishlaydi. Google Cloud'da ilovani "Testing" holatida qoldirib, **Audience → Test users** ga shu Gmail'larni qo'shing.
 Eslatma: bu himoya saytni oddiy tashrif buyuruvchilardan yashiradi, lekin repozitoriy ochiq (public) bo'lsa, kod va katalog GitHub'da ko'rinadi.
 
+## Admin rejimi (saytni brauzerdan tahrirlash)
+
+Faqat `src/config.ts` dagi `ADMIN_EMAILS` ro'yxatidagi Gmail bilan kirgan odam ko'radi.
+
+- Pastki chap burchakdagi **✏️ Tahrirlash** — saytdagi istalgan matn, tovar, kategoriya, aksiya, banner yoki logotipni bosib tahrirlash.
+- O'zbekcha matn yozilganda ruscha va inglizcha **avtomatik tarjima** qilinadi (bepul Google Translate / MyMemory; qo'lda tuzatish mumkin).
+- Rasm yuklash: tovar, kategoriya, xizmat, aksiya, banner va logotip uchun. Katta rasm avtomatik kichraytiriladi.
+- Yangi tovar qo'shish, tovarni yashirish, narx va chegirmani o'zgartirish.
+- **🚀 Nashr qilish** — o'zgarishlar `public/content.json` va `public/uploads/` ga bitta commit bilan yoziladi, GitHub Actions saytni 1–2 daqiqada yangilaydi.
+- Nashr qilish uchun bir marta **GitHub tokeni** kerak: Admin panel → "GitHub ulash" (fine-grained token, faqat `savdo-uz` repozitoriysi, *Contents: Read and write*). Token faqat admin brauzerida saqlanadi.
+
 ## GitHub'ga joylash
 
 ```bash

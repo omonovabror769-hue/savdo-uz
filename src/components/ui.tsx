@@ -8,6 +8,11 @@ import { IconChat, IconClose, GoogleG, Star, IconCheck } from './Icons';
 import { Logo } from './Header';
 import { categories, catById } from '../data/catalog';
 
+/** Rasm yoki (rasm yo'q bo'lsa) emoji */
+export function Pic({ img, e, alt = '' }: { img?: string; e: string; alt?: string }) {
+  return img ? <img src={img} alt={alt} className="pic-img" loading="lazy" /> : <>{e}</>;
+}
+
 // Rasm o'rnida — kategoriyaga mos rangdagi fon ustida emoji
 const tints: Record<string, string> = {
   stroy: '#fbe9e1', tools: '#e8eef6', electric: '#fff6d6', engineering: '#e3f2f5', finish: '#f3ebf7',

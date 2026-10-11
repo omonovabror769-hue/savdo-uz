@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { applyContent, loadContent } from './admin/content';
 import './styles.css';
 
 // Brauzer tarjimoni (Google Translate) yoki kengaytmalar sahifa matnini o'zgartirsa,
@@ -18,8 +19,12 @@ if (typeof Node === 'function' && Node.prototype) {
   };
 }
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+// Admin tahrirlarini (content.json) yuklab, keyin saytni chizamiz
+loadContent().then((content) => {
+  applyContent(content);
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App content={content} />
+    </StrictMode>,
+  );
+});

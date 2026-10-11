@@ -14,3 +14,11 @@ export const PRIVATE_MODE = true;
 export const ALLOWED_EMAILS: string[] = [
   'omonovabror769@gmail.com',
 ];
+
+// ADMIN: tahrirlash rejimini faqat shu Gmail'lar ko'radi (saytga Google orqali kirgan bo'lishi kerak)
+export const ADMIN_EMAILS: string[] = [
+  'omonovabror769@gmail.com',
+];
+
+// Admin o'zgarishlari shu GitHub repozitoriyga yoziladi
+export const GITHUB_REPO = { owner: 'omonovabror769-hue', repo: 'savdo-uz', branch: 'main' };

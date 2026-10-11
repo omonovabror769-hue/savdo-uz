@@ -104,15 +104,25 @@ products.forEach((p) => {
   bySub.get(p.subId)!.push(p);
   byCat.get(p.catId)!.push(p);
 });
+export const visible = (p: Product) => !p.hidden;
 // Nusxa qaytaramiz — chaqiruvchi .sort() qilsa ham asl ro'yxat buzilmaydi
 export function productsOfSub(subId: string) {
-  return [...(bySub.get(subId) || [])];
+  return (bySub.get(subId) || []).filter(visible);
 }
 export function productsOfCat(catId: string) {
-  return [...(byCat.get(catId) || [])];
+  return (byCat.get(catId) || []).filter(visible);
 }
 export function countOfSub(subId: string) {
-  return bySub.get(subId)?.length || 0;
+  return (bySub.get(subId) || []).filter(visible).length;
+}
+/** Admin qo'shgan yangi tovarni katalogga kiritish */
+export function addProductToCatalog(p: Product) {
+  products.push(p);
+  productById.set(p.id, p);
+  if (!bySub.has(p.subId)) bySub.set(p.subId, []);
+  if (!byCat.has(p.catId)) byCat.set(p.catId, []);
+  bySub.get(p.subId)!.push(p);
+  byCat.get(p.catId)!.push(p);
 }
 
 export function searchProducts(q: string): Product[] {
@@ -120,6 +130,7 @@ export function searchProducts(q: string): Product[] {
   if (!t) return [];
   const words = t.split(/\s+/);
   return products.filter((p) => {
+    if (p.hidden) return false;
     const hay = (p.n.join(' ') + ' ' + p.brand + ' ' + p.spec + ' ' + p.sku).toLowerCase();
     return words.every((w) => hay.includes(w));
   });

@@ -108,7 +108,7 @@ export function Orders() {
                   if (!p) return null;
                   return (
                     <Link key={l.id} to={`/product/${p.id}`} className="order-item" title={fullName(p, tr)}>
-                      <Thumb emoji={p.emoji} catId={p.catId} size="sm" />
+                      <Thumb emoji={p.emoji} catId={p.catId} size="sm" img={p.img} />
                       <span className="small">×{l.qty}</span>
                     </Link>
                   );
@@ -168,7 +168,7 @@ export function Compare() {
                   <th />
                   {items.map((p) => (
                     <th key={p.id}>
-                      <Link to={`/product/${p.id}`}><Thumb emoji={p.emoji} catId={p.catId} size="sm" /></Link>
+                      <Link to={`/product/${p.id}`}><Thumb emoji={p.emoji} catId={p.catId} size="sm" img={p.img} /></Link>
                       <Link to={`/product/${p.id}`} className="pname">{fullName(p, tr)}</Link>
                       <button className="icon-btn" onClick={() => toggleCmp(p.id)} aria-label={t('remove')}><IconTrash size={16} /></button>
                     </th>
