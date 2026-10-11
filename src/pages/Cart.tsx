@@ -92,11 +92,11 @@ export default function Cart() {
 
 function Checkout({ onClose, onDone }: { onClose: () => void; onDone: (o: Order) => void }) {
   const { t, money } = useI18n();
-  const { placeOrder, cartTotal, user } = useStore();
+  const { placeOrder, cartTotal, user, profile, setProfile } = useStore();
   const [delivery, setDelivery] = useState<'courier' | 'pickup'>('courier');
   const [pay, setPay] = useState<'cash' | 'card'>('card');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('+998 ');
+  const [address, setAddress] = useState(profile.address);
+  const [phone, setPhone] = useState(profile.phone || '+998 ');
   const [err, setErr] = useState('');
   const fee = delivery === 'courier' && cartTotal < FREE_FROM ? COURIER : 0;
 
@@ -104,6 +104,7 @@ function Checkout({ onClose, onDone }: { onClose: () => void; onDone: (o: Order)
     e.preventDefault();
     if (phone.replace(/\D/g, '').length < 12) return setErr(t('phone') + ': +998 XX XXX-XX-XX');
     if (delivery === 'courier' && address.trim().length < 5) return setErr(t('address'));
+    setProfile({ phone, ...(delivery === 'courier' ? { address } : {}) });
     onDone(placeOrder({ delivery, pay, address: delivery === 'pickup' ? '—' : address, phone }));
   };
 

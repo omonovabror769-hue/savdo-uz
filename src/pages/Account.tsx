@@ -6,7 +6,8 @@ import { ProductCard, fullName } from '../components/Product';
 import { Thumb } from '../components/ui';
 import { GoogleG, IconTrash } from '../components/Icons';
 import { isDemo } from '../store/auth';
-import type { ReactNode } from 'react';
+import { useState, type FormEvent, type ReactNode } from 'react';
+import { cities } from '../data/content';
 
 function AccountShell({ children, title }: { children: ReactNode; title: string }) {
   const { t, tr } = useI18n();
@@ -66,8 +67,9 @@ export function Account() {
           <div className="acc-stats">
             <Link to="/account/orders" className="stat"><b>{orders.length}</b><span>{t('orders')}</span></Link>
             <Link to="/favorites" className="stat"><b>{favs.length}</b><span>{t('favorites')}</span></Link>
-            <Link to="/account/points" className="stat"><b>{Math.round(orders.reduce((s, o) => s + o.total, 0) * 0.02)}</b><span>{t('balance')}</span></Link>
+            <Link to="/account/points" className="stat"><b>{Math.round(orders.filter((o) => o.status !== 'cancelled').reduce((s, o) => s + o.total, 0) * 0.02)}</b><span>{t('balance')}</span></Link>
           </div>
+          <ProfileForm />
         </div>
       )}
     </AccountShell>
@@ -76,7 +78,7 @@ export function Account() {
 
 export function Orders() {
   const { t, money, tr } = useI18n();
-  const { user, orders } = useStore();
+  const { user, orders, cancelOrder, repeatOrder, showToast } = useStore();
   const dfmt = (s: string) => new Date(s).toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' });
   return (
     <AccountShell title={t('myOrders')}>
@@ -89,8 +91,16 @@ export function Orders() {
               <div className="order-head">
                 <b>{t('orderNo')}{o.no}</b>
                 <span className="muted">{dfmt(o.date)}</span>
-                <span className="pill green">{t('statusNew')}</span>
+                {o.status === 'cancelled'
+                  ? <span className="pill grey">{tr(['Bekor qilingan', 'Отменён', 'Cancelled'])}</span>
+                  : <span className="pill green">{t('statusNew')}</span>}
                 <b className="order-sum">{money(o.total)}</b>
+              </div>
+              <div className="order-actions">
+                <button className="btn btn-ghost sm" onClick={() => { repeatOrder(o.no); showToast(t('added')); }}>{tr(['Yana buyurtma qilish', 'Повторить заказ', 'Order again'])}</button>
+                {o.status !== 'cancelled' && (
+                  <button className="link-btn small danger-l" onClick={() => cancelOrder(o.no)}>{tr(['Buyurtmani bekor qilish', 'Отменить заказ', 'Cancel order'])}</button>
+                )}
               </div>
               <div className="order-items">
                 {o.lines.map((l) => {
@@ -116,7 +126,7 @@ export function Orders() {
 export function Points() {
   const { t, money } = useI18n();
   const { user, orders } = useStore();
-  const pts = Math.round(orders.reduce((s, o) => s + o.total, 0) * 0.02);
+  const pts = Math.round(orders.filter((o) => o.status !== 'cancelled').reduce((s, o) => s + o.total, 0) * 0.02);
   return (
     <AccountShell title={t('points')}>
       {!user ? <NeedLogin /> : (
@@ -216,5 +226,36 @@ export function Requests() {
         </div>
       )}
     </AccountShell>
+  );
+}
+
+function ProfileForm() {
+  const { tr, t } = useI18n();
+  const { profile, setProfile, showToast, club } = useStore();
+  const [f, setF] = useState(profile);
+  const save = (e: FormEvent) => {
+    e.preventDefault();
+    setProfile(f);
+    showToast(tr(["Ma'lumotlar saqlandi", 'Данные сохранены', 'Saved']));
+  };
+  return (
+    <form className="card profile-form" onSubmit={save}>
+      <h3>{t('personal')}</h3>
+      <div className="rform">
+        <label className="field"><span>{t('phone')}</span><input id="pf-phone" type="tel" value={f.phone || '+998 '} onChange={(e) => setF({ ...f, phone: e.target.value })} /></label>
+        <label className="field"><span>{tr(["Tug'ilgan sana", 'Дата рождения', 'Date of birth'])}</span><input id="pf-bday" type="date" value={f.birthday} onChange={(e) => setF({ ...f, birthday: e.target.value })} /></label>
+        <label className="field"><span>{t('city')}</span>
+          <select id="pf-city" value={f.city} onChange={(e) => setF({ ...f, city: +e.target.value })}>
+            {cities.map((c, i) => <option key={i} value={i}>{tr(c)}</option>)}
+          </select>
+        </label>
+        <label className="field"><span>{t('address')}</span><input id="pf-address" value={f.address} placeholder={t('addressPh')} onChange={(e) => setF({ ...f, address: e.target.value })} /></label>
+        <p className="muted small full">
+          {club ? tr(["Siz Do'stlar klubi a'zosisiz.", 'Вы участник Клуба друзей.', 'You are a Friends club member.']) : <Link to="/club" className="link-u">{tr(["Do'stlar klubiga qo'shiling", 'Вступите в Клуб друзей', 'Join the Friends club'])}</Link>}
+          {' · '}{tr(["Telefon va manzil buyurtma berishda avtomatik to'ldiriladi.", 'Телефон и адрес подставятся при оформлении заказа.', 'Phone and address are filled in automatically at checkout.'])}
+        </p>
+        <button className="btn btn-yellow" type="submit">{t('saved')}</button>
+      </div>
+    </form>
   );
 }

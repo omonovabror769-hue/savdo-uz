@@ -115,12 +115,28 @@ export const cities: L3[] = [
   ['Qarshi', 'Карши', 'Karshi'],
 ];
 
-export const trucks: { e: string; n: L3; price: number }[] = [
-  { e: '📦', n: ['10 kg gacha', 'До 10 кг', 'Up to 10 kg'], price: 29000 },
-  { e: '🚐', n: ['Kuryer ekspress', 'Курьер Экспресс', 'Express courier'], price: 49000 },
-  { e: '🛻', n: ['Damas 0.5 t', 'Damas 0.5 т', 'Damas 0.5 t'], price: 120000 },
-  { e: '🚚', n: ['Labo 1 t', 'Labo 1 т', 'Labo 1 t'], price: 180000 },
-  { e: '🚛', n: ['Isuzu 3.5 t', 'Isuzu 3.5 т', 'Isuzu 3.5 t'], price: 350000 },
-  { e: '🏗️', n: ['Manipulyator 6 t', 'Манипулятор 6 т', 'Crane truck 6 t'], price: 650000 },
-  { e: '🚜', n: ['Manipulyator 10 t', 'Манипулятор 10 т', 'Crane truck 10 t'], price: 950000 },
+export const trucks: { e: string; n: L3; price: number; cap: number }[] = [
+  { e: '📦', n: ['10 kg gacha', 'До 10 кг', 'Up to 10 kg'], price: 29000, cap: 10 },
+  { e: '🚐', n: ['Kuryer ekspress', 'Курьер Экспресс', 'Express courier'], price: 49000, cap: 50 },
+  { e: '🛻', n: ['Damas 0.5 t', 'Damas 0.5 т', 'Damas 0.5 t'], price: 120000, cap: 500 },
+  { e: '🚚', n: ['Labo 1 t', 'Labo 1 т', 'Labo 1 t'], price: 180000, cap: 1000 },
+  { e: '🚛', n: ['Isuzu 3.5 t', 'Isuzu 3.5 т', 'Isuzu 3.5 t'], price: 350000, cap: 3500 },
+  { e: '🏗️', n: ['Manipulyator 6 t', 'Манипулятор 6 т', 'Crane truck 6 t'], price: 650000, cap: 6000 },
+  { e: '🚜', n: ['Manipulyator 10 t', 'Манипулятор 10 т', 'Crane truck 10 t'], price: 950000, cap: 10000 },
+];
+
+export const districts: { n: L3; km: number }[] = [
+  { n: ['Chilonzor', 'Чиланзар', 'Chilanzar'], km: 3 },
+  { n: ['Yunusobod', 'Юнусабад', 'Yunusabad'], km: 12 },
+  { n: ['Mirzo Ulug‘bek', 'Мирзо-Улугбек', 'Mirzo Ulugbek'], km: 14 },
+  { n: ['Yakkasaroy', 'Яккасарай', 'Yakkasaray'], km: 6 },
+  { n: ['Shayxontohur', 'Шайхантахур', 'Shaykhantakhur'], km: 8 },
+  { n: ['Olmazor', 'Алмазар', 'Almazar'], km: 9 },
+  { n: ['Uchtepa', 'Учтепа', 'Uchtepa'], km: 7 },
+  { n: ['Sergeli', 'Сергели', 'Sergeli'], km: 11 },
+  { n: ['Yashnobod', 'Яшнабад', 'Yashnabad'], km: 15 },
+  { n: ['Mirobod', 'Мирабад', 'Mirabad'], km: 9 },
+  { n: ['Bektemir', 'Бектемир', 'Bektemir'], km: 20 },
+  { n: ['Yangihayot', 'Янгихаёт', 'Yangikhayot'], km: 16 },
+  { n: ['Toshkent viloyati', 'Ташкентская область', 'Tashkent region'], km: 35 },
 ];
