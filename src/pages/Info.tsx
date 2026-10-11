@@ -86,7 +86,7 @@ export function PromoPage() {
             ) : (
               <>
                 <p>{tr(["Ishtirok etish uchun Do'stlar klubiga qo'shiling.", 'Чтобы участвовать, вступите в Клуб друзей.', 'Join the Friends club to take part.'])}</p>
-                <button className="btn btn-yellow wide" onClick={() => (user ? (joinClub(), showToast(tr(["Klubga qo'shildingiz", 'Вы вступили в клуб', 'You joined the club']))) : login())}>
+                <button className="btn btn-brand wide" onClick={() => (user ? (joinClub(), showToast(tr(["Klubga qo'shildingiz", 'Вы вступили в клуб', 'You joined the club']))) : login())}>
                   {user ? tr(["Klubga qo'shilish", 'Вступить в клуб', 'Join the club']) : <><GoogleG size={16} /> {t('withGoogle')}</>}
                 </button>
               </>
@@ -94,7 +94,7 @@ export function PromoPage() {
           ) : (
             <>
               <p>{tr(["Aksiyadagi tovarlarni savatga qo'shing — chegirma avtomatik hisoblanadi.", 'Добавьте товары акции в корзину — скидка применится автоматически.', 'Add offer products to the cart; the discount applies automatically.'])}</p>
-              <Link to={p.link || '/sale'} className="btn btn-yellow wide">{tr(["Tovarlarni ko'rish", 'Смотреть товары', 'View products'])}</Link>
+              <Link to={p.link || '/sale'} className="btn btn-brand wide">{tr(["Tovarlarni ko'rish", 'Смотреть товары', 'View products'])}</Link>
             </>
           )}
         </aside>
@@ -183,7 +183,7 @@ export function Club() {
         <div>
           <ul className="checks">{perks.map((p, i) => <li key={i}><IconCheck size={16} /> {tr(p)}</li>)}</ul>
           {!club && (
-            <button className="btn btn-yellow" onClick={() => (user ? (joinClub(), showToast(tr(["Klubga qo'shildingiz", 'Вы вступили в клуб', 'You joined the club']))) : login())}>
+            <button className="btn btn-brand" onClick={() => (user ? (joinClub(), showToast(tr(["Klubga qo'shildingiz", 'Вы вступили в клуб', 'You joined the club']))) : login())}>
               {user ? tr(["Klubga bepul qo'shilish", 'Вступить бесплатно', 'Join for free']) : <><GoogleG size={16} /> {t('withGoogle')}</>}
             </button>
           )}

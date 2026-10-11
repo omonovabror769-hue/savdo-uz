@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className="done">
         <div className="nf">404</div>
         <h1>{t('notFound')}</h1>
-        <Link to="/" className="btn btn-yellow">{t('toHome')}</Link>
+        <Link to="/" className="btn btn-brand">{t('toHome')}</Link>
       </div>
     </div>
   );

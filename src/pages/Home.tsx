@@ -9,7 +9,7 @@ import { PromoCard } from './Promos';
 
 const slides = [
   {
-    bg: 'linear-gradient(110deg,#ffd400 0%,#ffd400 55%,#ffb800 100%)', fg: '#1b1b1b', emoji: '🧱🪣🛠️', to: '/catalog/stroy',
+    bg: 'linear-gradient(110deg,#e31e24 0%,#e31e24 55%,#b3121a 100%)', fg: '#ffffff', emoji: '🧱🪣🛠️', to: '/catalog/stroy',
     t: ["Kuzgi ta'mir mavsumi: qurilish materiallariga −20% gacha", 'Осенний сезон ремонта: до −20% на стройматериалы', 'Autumn renovation season: up to −20% on building materials'],
     s: ["Sement, g'isht, gipsokarton va aralashmalar — Toshkent bo'ylab 2 soatda yetkazamiz", 'Цемент, кирпич, гипсокартон и смеси — доставим по Ташкенту за 2 часа', 'Cement, bricks, drywall and mixes delivered across Tashkent in 2 hours'],
   },
@@ -56,7 +56,7 @@ export default function Home() {
           </div>
         </Link>
         <div className="hero-side">
-          <Link to={`/promos/${promos[0].id}`} className="hero-mini" style={{ background: '#14171c', color: '#ffd400' }}>
+          <Link to={`/promos/${promos[0].id}`} className="hero-mini" style={{ background: '#14171c', color: '#ffffff' }}>
             <b>{tr(promos[0].title)}</b>
             <span>{tr(promos[0].dates)}</span>
           </Link>

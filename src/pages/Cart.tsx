@@ -30,7 +30,7 @@ export default function Cart() {
           <p className="big">{t('orderNo')}{done.no}</p>
           <p>{t('total')}: <b>{money(done.total)}</b></p>
           <div className="row-gap">
-            <Link to="/account" className="btn btn-yellow">{t('myOrders')}</Link>
+            <Link to="/account" className="btn btn-brand">{t('myOrders')}</Link>
             <Link to="/" className="btn btn-ghost">{t('toHome')}</Link>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function Cart() {
         <div className="cart-empty">
           <b>{t('cartEmpty')}</b>
           <p className="muted">{t('cartEmptyHint')}</p>
-          <Link to="/catalog/stroy" className="btn btn-yellow">{t('goCatalog')}</Link>
+          <Link to="/catalog/stroy" className="btn btn-brand">{t('goCatalog')}</Link>
         </div>
       ) : (
         <div className="cart">
@@ -75,7 +75,7 @@ export default function Cart() {
             <div className="srow total"><span>{t('total')}</span><b>{money(cartTotal)}</b></div>
             <p className="muted small">+{money(Math.round(cartTotal * 0.02))} {tr(['ball', 'баллов', 'points'])}</p>
             {user ? (
-              <button className="btn btn-yellow wide" onClick={() => setCheckout(true)}>{t('checkout')}</button>
+              <button className="btn btn-brand wide" onClick={() => setCheckout(true)}>{t('checkout')}</button>
             ) : (
               <>
                 <p className="small">{t('loginToOrder')}</p>
@@ -141,7 +141,7 @@ function Checkout({ onClose, onDone }: { onClose: () => void; onDone: (o: Order)
         <div className="srow"><span>{t('deliveryCost')}</span><span>{fee ? money(fee) : t('free')}</span></div>
         <div className="srow total"><span>{t('total')}</span><b>{money(cartTotal + fee)}</b></div>
         {err && <p className="err">{err}</p>}
-        <button className="btn btn-yellow wide" type="submit">{t('confirm')}</button>
+        <button className="btn btn-brand wide" type="submit">{t('confirm')}</button>
       </form>
     </Modal>
   );

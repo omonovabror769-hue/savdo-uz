@@ -254,7 +254,7 @@ function ProfileForm() {
           {club ? tr(["Siz Do'stlar klubi a'zosisiz.", 'Вы участник Клуба друзей.', 'You are a Friends club member.']) : <Link to="/club" className="link-u">{tr(["Do'stlar klubiga qo'shiling", 'Вступите в Клуб друзей', 'Join the Friends club'])}</Link>}
           {' · '}{tr(["Telefon va manzil buyurtma berishda avtomatik to'ldiriladi.", 'Телефон и адрес подставятся при оформлении заказа.', 'Phone and address are filled in automatically at checkout.'])}
         </p>
-        <button className="btn btn-yellow" type="submit">{t('saved')}</button>
+        <button className="btn btn-brand" type="submit">{t('saved')}</button>
       </div>
     </form>
   );

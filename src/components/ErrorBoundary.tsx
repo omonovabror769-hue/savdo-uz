@@ -38,7 +38,7 @@ export default class ErrorBoundary extends Component<{ children: ReactNode; rese
         <p>Ошибка при открытии страницы · Something went wrong</p>
         <pre>{String(error?.message || error)}</pre>
         <div className="row-gap">
-          <button className="btn btn-yellow" onClick={() => location.reload()}>Qayta yuklash</button>
+          <button className="btn btn-brand" onClick={() => location.reload()}>Qayta yuklash</button>
           <button className="btn btn-ghost" onClick={() => { location.hash = '#/'; location.reload(); }}>Bosh sahifa</button>
           <button className="btn btn-ghost" onClick={clearData}>Saqlangan ma'lumotlarni tozalash</button>
         </div>

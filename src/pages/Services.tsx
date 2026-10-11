@@ -145,7 +145,7 @@ function Materials({ lines }: { lines: Line[] }) {
         </table>
       </div>
       <button
-        className="btn btn-yellow"
+        className="btn btn-brand"
         onClick={() => {
           rows.forEach((l) => addToCart(l.id, l.qty));
           showToast(tr(["Barcha materiallar savatga qo'shildi", 'Все материалы добавлены в корзину', 'All materials added to cart']));

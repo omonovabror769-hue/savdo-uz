@@ -165,7 +165,7 @@ function Reviews({ productId }: { productId: string }) {
               <textarea id="rev-text" rows={4} value={text} onChange={(e) => setText(e.target.value)} placeholder={tr(["Tovar haqida nima deya olasiz?", 'Что скажете о товаре?', 'What do you think of this product?'])} />
             </label>
             {err && <p className="err">{err}</p>}
-            <button className="btn btn-yellow" type="submit">{tr(['Yuborish', 'Отправить', 'Submit'])}</button>
+            <button className="btn btn-brand" type="submit">{tr(['Yuborish', 'Отправить', 'Submit'])}</button>
           </form>
         ) : (
           <>

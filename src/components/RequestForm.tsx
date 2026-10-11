@@ -66,7 +66,7 @@ export default function RequestForm({
         <b>{tr(['Ariza qabul qilindi', 'Заявка принята', 'Request received'])} №{sent}</b>
         <p className="muted">{tr(["Menejer 15 daqiqa ichida siz bilan bog'lanadi.", 'Менеджер свяжется с вами в течение 15 минут.', 'A manager will contact you within 15 minutes.'])}</p>
         <div className="row-gap">
-          <Link to="/account/requests" className="btn btn-yellow">{tr(['Arizalarim', 'Мои заявки', 'My requests'])}</Link>
+          <Link to="/account/requests" className="btn btn-brand">{tr(['Arizalarim', 'Мои заявки', 'My requests'])}</Link>
           <button className="btn btn-ghost" onClick={() => setSent(null)}>{tr(['Yana ariza', 'Ещё заявка', 'New request'])}</button>
         </div>
       </div>
@@ -93,7 +93,7 @@ export default function RequestForm({
         </label>
       ))}
       {err && <p className="err full">{err}</p>}
-      <button className="btn btn-yellow full" type="submit">{submitLabel || tr(['Ariza yuborish', 'Отправить заявку', 'Send request'])}</button>
+      <button className="btn btn-brand full" type="submit">{submitLabel || tr(['Ariza yuborish', 'Отправить заявку', 'Send request'])}</button>
     </form>
   );
 }

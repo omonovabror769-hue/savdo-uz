@@ -120,7 +120,7 @@ export function Delivery() {
             <div className="srow total"><span>{t('total')}</span><b>{money(total)}</b></div>
             {kg > trucks[truck].cap && <p className="err">{tr(["Yuk bu mashina uchun og'ir — kattaroq mashina tanlang.", 'Груз слишком тяжёлый для этой машины — выберите больше.', 'Too heavy for this vehicle; pick a larger one.'])}</p>}
             <p className="muted small">{tr(["Buyurtma 3 000 000 so'mdan oshsa, kuryer yetkazishi bepul.", 'При заказе от 3 000 000 сум доставка курьером бесплатна.', 'Courier delivery is free for orders over 3 000 000 UZS.'])}</p>
-            <Link to="/cart" className="btn btn-yellow">{tr(["Savatga o'tish", 'Перейти в корзину', 'Go to cart'])}</Link>
+            <Link to="/cart" className="btn btn-brand">{tr(["Savatga o'tish", 'Перейти в корзину', 'Go to cart'])}</Link>
           </div>
           <div className="tabs">
             <button className={tab === 'd' ? 'on' : ''} onClick={() => setTab('d')}>{t('deliveryRules')}</button>
@@ -136,9 +136,9 @@ export function Delivery() {
             <path d="M60 0 L120 460 M0 160 L400 120 M250 0 L300 460 M0 400 L400 360" stroke="var(--map-road)" strokeWidth="5" />
             <path d="M200 70 L300 110 L330 210 L290 310 L190 340 L100 300 L80 190 L120 110 Z" fill="var(--zone1)" stroke="var(--zone1s)" strokeWidth="2" />
             <path d="M200 140 L260 160 L275 220 L245 270 L185 285 L140 255 L135 190 L160 150 Z" fill="var(--zone2)" stroke="var(--zone2s)" strokeWidth="2" />
-            <circle cx="205" cy="212" r="11" fill="var(--yellow)" stroke="#1b1b1b" strokeWidth="3" />
+            <circle cx="205" cy="212" r="11" fill="var(--brand)" stroke="#ffffff" strokeWidth="3" />
             <text x="205" y="250" textAnchor="middle" fontSize="15" fontWeight="700" fill="#1b1b1b">{tr(['Toshkent', 'Ташкент', 'Tashkent'])}</text>
-            <text x="20" y="440" fontSize="12" fill="#555"><tspan fill="#16a34a">●</tspan> {tr(['2 soatda', 'за 2 часа', 'in 2 hours'])}  <tspan fill="#e0b400">●</tspan> {tr(['Bugun', 'Сегодня', 'Same day'])}</text>
+            <text x="20" y="440" fontSize="12" fill="#555"><tspan fill="#16a34a">●</tspan> {tr(['2 soatda', 'за 2 часа', 'in 2 hours'])}  <tspan fill="#e31e24">●</tspan> {tr(['Bugun', 'Сегодня', 'Same day'])}</text>
           </svg>
         </div>
       </div>

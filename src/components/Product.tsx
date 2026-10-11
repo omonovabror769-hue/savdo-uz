@@ -81,7 +81,7 @@ export function BuyControls({ p, vertical }: { p: Product; vertical?: boolean })
       {b.line ? (
         <Link to="/cart" className="btn btn-in-cart"><IconCheck size={16} /> {t('inCart')}</Link>
       ) : (
-        <button className="btn btn-yellow" onClick={b.add}>{t('toCart')}</button>
+        <button className="btn btn-brand" onClick={b.add}>{t('toCart')}</button>
       )}
     </div>
   );
@@ -107,7 +107,7 @@ export function Badges({ p }: { p: Product }) {
   return (
     <div className="badges">
       {p.oldPrice && <span className="bdg bdg-red">−{Math.round((1 - p.price / p.oldPrice) * 100)}%</span>}
-      {p.hit && <span className="bdg bdg-yellow">{t('hitBadge')}</span>}
+      {p.hit && <span className="bdg bdg-hit">{t('hitBadge')}</span>}
       {p.isNew && <span className="bdg bdg-green">{t('newBadge')}</span>}
     </div>
   );

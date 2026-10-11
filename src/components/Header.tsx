@@ -259,7 +259,7 @@ export default function Header() {
               </NavLink>
             ))}
             <NavLink to="/promos" className="promo-link">% {t('promos')}</NavLink>
-            <NavLink to="/sale" className="chip-yellow">{t('cashback')}</NavLink>
+            <NavLink to="/sale" className="chip-brand">{t('cashback')}</NavLink>
             <div className="only-mobile mobile-extra">
               <LangSwitch />
             </div>
